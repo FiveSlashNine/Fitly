@@ -30,10 +30,25 @@ public class Session {
     private String status;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="gym_id", referencedColumnName="id")
+    @JoinColumn(name = "gym_id", referencedColumnName = "id")
     @JsonIgnore
     private Gym gym;
 
+    @ManyToMany
+    @JoinTable(name = "booked_sessions", joinColumns = @JoinColumn(name = "session_id"), inverseJoinColumns =
+    @JoinColumn(name = "user_id"))
+    private List<User> sessionHolders;
 
 
+    public void addUser(User user) {
+        if (capacity > 0) {
+            sessionHolders.add(user);
+            capacity--;
+        }
+    }
+
+    public void removeUser(User user) {
+        sessionHolders.remove(user);
+        capacity++;
+    }
 }

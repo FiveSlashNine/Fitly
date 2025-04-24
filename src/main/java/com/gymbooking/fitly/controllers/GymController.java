@@ -60,7 +60,7 @@ public class GymController {
     }
 
     @DeleteMapping("deleteGym")
-    public void deleteGymById(@RequestBody Gym gym) {
+    public void deleteGym(@RequestBody Gym gym) {
         gymService.deleteGym(gym);
     }
 }

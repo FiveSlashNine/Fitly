@@ -2,7 +2,6 @@ package com.gymbooking.fitly.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +19,7 @@ public class Gym {
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName="id")
     private User ownerUser;
+
     @OneToMany(mappedBy ="gym")
     private List<Session> sessionList;
     private String name;

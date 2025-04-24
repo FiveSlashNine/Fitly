@@ -2,7 +2,7 @@ package com.gymbooking.fitly.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gymbooking.fitly.models.Gym;
-import com.gymbooking.fitly.models.Session;
+import com.gymbooking.fitly.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,18 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+public class SessionDTO {
     private Long id;
-    private String username;
-    private String phoneNumber;
-    private String email;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String title;
+    private String description;
+    private String type;
+    private String date;
+    private String cost;
+    private String startTime;
+    private String endTime;
+    private int capacity;
+    private String status;
+
     private Gym gym;
-
-    private Boolean isGymOwner;
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Session> sessions;
+    private List<User> sessionHolders;
 }

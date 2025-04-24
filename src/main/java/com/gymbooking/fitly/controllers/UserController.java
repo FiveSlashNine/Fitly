@@ -38,6 +38,10 @@ public class UserController {
                               @RequestParam(required = false) String password) {
         return userMapper.map(userService.updateUserById(id, username, email, phoneNumber, password));
     }
+    @PutMapping("updateUserSessionList")
+    public UserDTO updateUserSessionList(@RequestParam Long userId,@RequestParam Long sessionId) {
+        return userMapper.map(userService.updateUserSessionList(userId,sessionId));
+    }
 
     @GetMapping("getUsers")
     public List<UserDTO> getUsers() {
@@ -65,4 +69,10 @@ public class UserController {
     public void deleteUserById(@RequestBody User user) {
         userService.deleteUser(user);
     }
+
+    @PutMapping("removeUserFromSession")
+    public UserDTO removeUserFromSession(@RequestParam Long userId,@RequestParam Long sessionId) {
+        return userMapper.map(userService.removeUserFromSession(userId,sessionId));
+    }
+
 }
