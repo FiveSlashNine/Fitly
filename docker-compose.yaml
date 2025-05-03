@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: .
+      context: ./fitly_backend
       dockerfile: Dockerfile
     image: app:latest
     ports:
@@ -25,6 +25,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./fitly_frontend
+      dockerfile: Dockerfile
+    image: frontend:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
     networks:
       - app-network
 
