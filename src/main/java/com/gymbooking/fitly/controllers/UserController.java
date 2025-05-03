@@ -4,11 +4,13 @@ import com.gymbooking.fitly.dtos.UserDTO;
 import com.gymbooking.fitly.mappers.UserMapper;
 import com.gymbooking.fitly.models.User;
 import com.gymbooking.fitly.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,4 +77,8 @@ public class UserController {
         return userMapper.map(userService.removeUserFromSession(userId,sessionId));
     }
 
+    @GetMapping("/token/refresh")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+       userService.refreshToken(request, response);
+    }
 }

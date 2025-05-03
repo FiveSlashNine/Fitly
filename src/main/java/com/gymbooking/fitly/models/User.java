@@ -25,6 +25,7 @@ public class User {
     private String email;
     private String password;
     private Boolean isGymOwner;
+    private String roles;
 
     @OneToOne(mappedBy = "ownerUser",cascade = CascadeType.ALL)
     @JsonIgnore
