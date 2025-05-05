@@ -68,5 +68,25 @@ public class SessionController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("getSessionByLocation")
+    public List<SessionDTO> getSessionByLocation(@RequestParam String location) {
+    List<SessionDTO> sessions = sessionService.getSessionByLocation(location).stream()
+            .map(sessionMapper::map)
+            .collect(Collectors.toList());
 
+    if (sessions.isEmpty()) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Sessions in location: "+location+" not found ");          
+    }else return sessions;
+}
+
+    @GetMapping("getSessionByLocationAndType")
+    public List<SessionDTO> getSessionByLocationAndType(@RequestParam String location,@RequestParam String type){
+        List<SessionDTO> sessions = sessionService.getSessionByLocationAndType(location, type).stream()
+            .map(sessionMapper::map)
+            .collect(Collectors.toList());
+            if (sessions.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Sessions in location: "+location+" with type: "+type+" not found ");          
+            }else return sessions;
+
+    }
 }

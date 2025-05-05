@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,4 +50,29 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
+    public List<Session> getSessionByLocation(String location) {
+        List<Gym> gymsWithLocation=gymRepository.findByLocation(location);
+        List<Session> sessionsWithLocation = new ArrayList<>();
+        for (Gym gym : gymsWithLocation){
+            sessionsWithLocation.addAll(gym.getSessionList());
+        }
+        return sessionsWithLocation;
+    }
+
+    public List<Session> getSessionByLocationAndType(String location, String type) {
+        List<Gym> gymsWithLocation = gymRepository.findByLocation(location);
+        List<Session> sessionsWithLocationAndType = new ArrayList<>();
+
+        for (Gym gym : gymsWithLocation) {
+            for (Session session : gym.getSessionList()) {
+             if (session.getType().equalsIgnoreCase(type)) {
+                  sessionsWithLocationAndType.add(session);
+             }
+            }
+        }
+
+    return sessionsWithLocationAndType;
+
+
+}
 }
