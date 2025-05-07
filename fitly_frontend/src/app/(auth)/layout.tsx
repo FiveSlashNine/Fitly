@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Reserve Your Next Workout",
 };
 
-export default function RootLayout({
+export default function SignInOrUpLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -27,7 +27,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="relative">
         {children}
+        </div>
+        <div className="absolute top-0 left-0">
+ 
+       </div>
       </body>
     </html>
   );
