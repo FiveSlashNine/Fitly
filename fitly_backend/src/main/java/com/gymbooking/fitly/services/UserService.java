@@ -37,6 +37,10 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email format");
         }
 
+        if(!isValidUsername(user.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid username format");
+        }
+
         if (user.getPassword().length() < 6) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters long");
         }
@@ -53,6 +57,13 @@ public class UserService {
             return user;
         }
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Email is used from another user");
+    }
+
+    public boolean isValidUsername(String username) {
+        String usernameRegex = "^[a-zA-Z0-9._-]{1,20}$";
+        Pattern pattern = Pattern.compile(usernameRegex);
+        Matcher matcher = pattern.matcher(username);
+        return matcher.matches();
     }
 
     private boolean isValidEmail(String email) {
