@@ -34,6 +34,14 @@ public class User {
     @ManyToMany(mappedBy = "sessionHolders")
     private List<Session> sessions;
 
+    public User(String username, String phoneNuber, String email, String password, boolean isGymOwner) {
+        this.username = username;
+        this.phoneNumber = phoneNuber;
+        this.email = email;
+        this.password = password;
+        this.isGymOwner = isGymOwner;
+    }
+
     public void addSession(Session session) {
         sessions.add(session);
     }

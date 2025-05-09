@@ -45,10 +45,6 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters long");
         }
 
-        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be empty");
-        }
-
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));

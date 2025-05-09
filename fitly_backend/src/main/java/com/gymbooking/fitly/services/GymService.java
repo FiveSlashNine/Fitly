@@ -11,6 +11,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -20,10 +22,21 @@ public class GymService {
     private final UserRepository userRepository;
 
     public Gym createGym(Gym gym, Long userId){
+        if(!isValidGymName(gym.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid name format");
+        }
+
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with id: " + userId);
         gym.setOwnerUser(user.get());
         return gymRepository.save(gym);
+    }
+
+    public boolean isValidGymName(String gymName) {
+        String gymNameRegex = "^[a-zA-Z0-9._-]{1,20}$";
+        Pattern pattern = Pattern.compile(gymNameRegex);
+        Matcher matcher = pattern.matcher(gymName);
+        return matcher.matches();
     }
 
     public List<Gym> getGyms() {
