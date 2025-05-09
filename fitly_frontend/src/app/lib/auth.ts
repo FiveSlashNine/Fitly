@@ -21,11 +21,13 @@ export async function login(
       { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     );
 
-    const { accessToken, refreshToken, userId } = response.data;
+    const { accessToken, refreshToken, userId, needsGym } = response.data;
     const setAuthTokens = useAuthStore.getState().setAuthTokens;
     const setUserId = useAuthStore.getState().setUserId;
+    const setNeedsGym = useAuthStore.getState().setNeedsGym;
     setAuthTokens(accessToken, refreshToken);
     setUserId(userId);
+    setNeedsGym(needsGym === "true");
 
     return { success: true, accessToken };
   } catch (err: any) {

@@ -47,6 +47,13 @@ public class SecurityUser implements UserDetails {
         return "";
     }
 
+    public Boolean needsGym() {
+        if(user!=null) {
+            return user.getIsGymOwner() && user.getGym()==null;
+        }
+        return false;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(user!=null) {
