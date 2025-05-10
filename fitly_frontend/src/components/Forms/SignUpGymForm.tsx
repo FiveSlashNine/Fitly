@@ -47,6 +47,7 @@ export default function SignUpGymForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && <div className="text-red-600 text-sm">{error}</div>}
       <div className="space-y-2">
         <Label htmlFor="GymName">Gym Name</Label>
         <Input

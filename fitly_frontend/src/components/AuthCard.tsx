@@ -21,13 +21,16 @@ interface AuthCardProps {
 }
 
 export default function AuthCard({ initialTab = "signin" }: AuthCardProps) {
-  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
+
+  const handleTabChange = (newTab: TabType) => {
+    setActiveTab(newTab);
+    router.push(`/auth/${newTab}`);
+  };
 
   const toggleForm = () => {
-    const newTab: TabType = activeTab === "signin" ? "signup" : "signin";
-    setActiveTab(newTab);
-    router.push(`?tab=${newTab}`);
+    handleTabChange(activeTab === "signin" ? "signup" : "signin");
   };
 
   return (
@@ -42,10 +45,8 @@ export default function AuthCard({ initialTab = "signin" }: AuthCardProps) {
       <CardContent>
         <Tabs
           value={activeTab}
-          onValueChange={(val: string) => {
-            const newTab = val as TabType;
-            setActiveTab(newTab);
-            router.push(`?tab=${newTab}`);
+          onValueChange={(value) => {
+            handleTabChange(value as TabType);
           }}
         >
           <TabsList className="grid w-full grid-cols-2">

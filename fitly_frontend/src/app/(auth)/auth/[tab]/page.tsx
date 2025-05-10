@@ -1,13 +1,19 @@
 import AuthCard from "@/components/AuthCard";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default async function AuthPage({
-  searchParams,
+  params,
 }: {
-  searchParams: { tab?: string };
+  params: Promise<{ tab?: string }>;
 }) {
-  const { tab: rawTab } = await searchParams;
-  const tab = rawTab === "signup" ? "signup" : "signin";
+  const { tab: rawTab } = await params;
+
+  if (rawTab !== "signup" && rawTab !== "signin") {
+    redirect("/auth/signin");
+  }
+
+  const tab = rawTab;
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
