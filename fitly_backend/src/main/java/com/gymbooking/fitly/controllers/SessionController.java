@@ -25,9 +25,9 @@ public class SessionController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping("getSessions")
-    public List<SessionDTO> getSessions(){
-        return sessionService.getSessions().stream()
+    @GetMapping("/public/getSessions")
+    public List<SessionDTO> getSessions(@RequestParam(required = false) String location, @RequestParam(required = false) String type){
+        return sessionService.getSessions(location, type).stream()
                 .map(sessionMapper::map)
                 .collect(Collectors.toList());
     }
@@ -66,27 +66,5 @@ public class SessionController {
         return userService.getSessionUsers(sessionId).stream()
                 .map(userMapper::map)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("getSessionByLocation")
-    public List<SessionDTO> getSessionByLocation(@RequestParam String location) {
-    List<SessionDTO> sessions = sessionService.getSessionByLocation(location).stream()
-            .map(sessionMapper::map)
-            .collect(Collectors.toList());
-
-    if (sessions.isEmpty()) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Sessions in location: "+location+" not found ");          
-    }else return sessions;
-}
-
-    @GetMapping("getSessionByLocationAndType")
-    public List<SessionDTO> getSessionByLocationAndType(@RequestParam String location,@RequestParam String type){
-        List<SessionDTO> sessions = sessionService.getSessionByLocationAndType(location, type).stream()
-            .map(sessionMapper::map)
-            .collect(Collectors.toList());
-            if (sessions.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Sessions in location: "+location+" with type: "+type+" not found ");          
-            }else return sessions;
-
     }
 }

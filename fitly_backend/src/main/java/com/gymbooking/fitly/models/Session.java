@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import com.gymbooking.fitly.models.enums.SessionType;
+import com.gymbooking.fitly.models.enums.Status;
 import java.util.List;
 
 @Entity
@@ -21,13 +22,16 @@ public class Session {
     private Long id;
     private String title;
     private String description;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private SessionType type;
     private String date;
     private String cost;
     private String startTime;
     private String endTime;
     private int capacity;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    private String imageUrl;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "gym_id", referencedColumnName = "id")

@@ -6,6 +6,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { sessionTypes } from "../types/session";
 
 //ΦΟΡΤΩΝΩ ΔΥΝΑΜΙΚΑ ΤΟΝ ΧΑΡΤΗ ΑΠΟ ΤΟ COMPONENTS/ClientMap
 const DynamicMap = dynamic(() => import("../../components/ClientMap"), {
@@ -43,14 +44,14 @@ export default function Home() {
     if (sessionType) {
       //ΣΤΕΛΝΩ ΣΤΗΝ AVAILABLE SESSIONS ΚΑΙ ΤΟ LOCATION ΚΑΙ ΤΟΝ ΤΥΠΟΣ ΩΣΤΕ ΜΕΤΑ ΝΑ ΚΑΝΕΙ SEARCH ΚΑΙ ΜΕ ΤΑ ΔΥΟ
       router.push(
-        `/AvailableSessions?location=${encodeURIComponent(
+        `/availableSessions?location=${encodeURIComponent(
           location
         )}&type=${encodeURIComponent(sessionType)}`
       );
     } else {
       //ΑΝ ΧΡΗΣΤΗΣ ΔΕΝ ΕΠΙΛΕΞΕΙ ΤΥΠΟ ΓΥΜΝΑΣΤΙΚΗΣ ΣΤΕΛΝΕΙ ΜΟΝΟ ΤΟ LOCATION ΩΣΤΕ ΜΕΤΑ ΝΑ ΚΑΝΕΙ ΤΟ SEARCH ΜΟΝΟ ΓΙΑ ΤΟ LOCATION
       router.push(
-        `/AvailableSessions?location=${encodeURIComponent(location)}`
+        `/availableSessions?location=${encodeURIComponent(location)}`
       );
     }
   };
@@ -120,12 +121,11 @@ export default function Home() {
                   className="w-full appearance-none pl-10 pr-10 py-3 rounded-2xl border border-gray-200 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300 transition-all"
                 >
                   <option value="">Είδος</option>
-                  <option value="yoga">Yoga</option>
-                  <option value="pilates">Pilates</option>
-                  <option value="cardio">Cardio</option>
-                  <option value="crossfit">Crossfit</option>
-                  <option value="weightlifting">Βάρη</option>
-                  <option value="alt">Άλλο</option>
+                  {sessionTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </select>
                 <svg
                   className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"

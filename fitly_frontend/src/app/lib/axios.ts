@@ -19,7 +19,9 @@ api.interceptors.response.use(
   (res) => res,
   async (err) => {
     const config = err.config;
-    if (!config || config._retry) return Promise.reject(err);
+    if (!config?.withAuth || config._retry) {
+      return Promise.reject(err);
+    }
     config._retry = true;
 
     try {

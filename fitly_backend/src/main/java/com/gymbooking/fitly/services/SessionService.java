@@ -19,10 +19,12 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final GymRepository gymRepository;
 
-
-    public List<Session> getSessions() {
+    public List<Session> getSessions(String location, String type) {
+        if(location!=null && type!=null) return getSessionByLocationAndType(location, type);
+        else if(location!=null) return getSessionByLocation(location); 
         return sessionRepository.findAll();
     }
+
     public Optional<Session> getSessionById(Long id) {
         return sessionRepository.findById(id);
     }
@@ -65,14 +67,12 @@ public class SessionService {
 
         for (Gym gym : gymsWithLocation) {
             for (Session session : gym.getSessionList()) {
-             if (session.getType().equalsIgnoreCase(type)) {
+             if (type.equals("ALL") || session.getType().name().equals(type)) {
                   sessionsWithLocationAndType.add(session);
              }
             }
         }
 
-    return sessionsWithLocationAndType;
-
-
-}
+        return sessionsWithLocationAndType;
+    }
 }

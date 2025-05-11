@@ -18,6 +18,7 @@ public class GymDTO {
     private Long id;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User ownerUser;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Session> sessionList;
     private String name;
     private String location;

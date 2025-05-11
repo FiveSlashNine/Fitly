@@ -22,7 +22,7 @@ public class Config {
 		return args -> {
 			User admin = userService.createUser(new User("admin", "1", "admin@gmail.com", "123456", true));
 			admin.setRoles("PRIVILEGED");
-			userService.updateUser(admin);
+			admin = userService.updateUser(admin);
 			List<String> roles = Arrays.stream(admin.getRoles().split(",")).collect(Collectors.toList());
 			System.out.println("\n---------ADMIN CREDENTIALS---------\n");
 			System.out.println("AccessToken: " + TokenUtil.generateAccessToken(admin.getEmail(), new StringBuffer(), admin.getId().toString(), admin.getUsername(), roles));

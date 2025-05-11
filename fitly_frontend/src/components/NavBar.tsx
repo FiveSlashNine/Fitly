@@ -34,6 +34,12 @@ export default function NavBar() {
           >
             Επικοινωνία
           </Link>
+          <Link
+            href="/availableSessions"
+            className="text-sm text-gray-600 hover:text-emerald-700 transition-colors"
+          >
+            Διαθέσιμα Προγράμματα
+          </Link>
 
           {!loading &&
             (accessToken ? (
