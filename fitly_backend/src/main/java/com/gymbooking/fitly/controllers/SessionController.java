@@ -4,13 +4,20 @@ import com.gymbooking.fitly.dtos.UserDTO;
 import com.gymbooking.fitly.mappers.SessionMapper;
 import com.gymbooking.fitly.mappers.UserMapper;
 import com.gymbooking.fitly.models.Session;
+import com.gymbooking.fitly.models.enums.SessionType;
+import com.gymbooking.fitly.models.enums.Status;
 import com.gymbooking.fitly.services.SessionService;
 import com.gymbooking.fitly.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import com.gymbooking.fitly.dtos.SessionDTO;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +33,14 @@ public class SessionController {
     private final UserMapper userMapper;
 
     @GetMapping("/public/getSessions")
-    public List<SessionDTO> getSessions(@RequestParam(required = false) String location, @RequestParam(required = false) String type){
-        return sessionService.getSessions(location, type).stream()
-                .map(sessionMapper::map)
-                .collect(Collectors.toList());
+    public Page<SessionDTO> getSessions(
+        @RequestParam(required = false) String location,
+        @RequestParam(required = false) SessionType type,
+        @RequestParam(required = false) Status status,
+        @RequestParam(required = false) String searchQuery,
+        @PageableDefault(size = 10, sort = {"date", "status", "cost", "capacity"}, direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return sessionMapper.toDTOPage(sessionService.getSessions(location, type, status, searchQuery, pageable));
     }
 
     @GetMapping("getSession")

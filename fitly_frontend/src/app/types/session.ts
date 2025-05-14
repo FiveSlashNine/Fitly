@@ -21,4 +21,4 @@ export const sessionTypes = [
   "ALT",
 ];
 
-export const sessionStatuses = ["Active", "Full", "Cancelled"];
+export const sessionStatuses = ["ACTIVE", "FULL", "CANCELLED"];

@@ -12,46 +12,62 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function AvailableSessionsPage() {
   const router = useRouter();
-  const [sessions, setSessions] = useState<Session[]>([]);
   const searchParams = useSearchParams();
 
-  const location = searchParams.get("location") || "";
-  const type = searchParams.get("type") || "";
-
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
-    type: type,
+    type: searchParams.get("type") || "",
     status: searchParams.get("status") || "",
     search: searchParams.get("search") || "",
+    location: searchParams.get("location") || "",
+    sort: searchParams.get("sort") || "",
   });
+
+  const itemsPerPage = 20;
 
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const params = Object.fromEntries(
-          Object.entries({ location, type }).filter(([_, value]) => value)
-        );
+        const params: Record<string, any> = {
+          location: filters.location,
+          type: filters.type,
+          status: filters.status,
+          searchQuery: filters.search,
+          page: currentPage - 1,
+          size: itemsPerPage,
+        };
 
-        const response = await axios.get<Session[]>(
-          `${API_BASE_URL}/api/v1/sessions/public/getSessions`,
-          {
-            params,
-          }
-        );
+        if (filters.sort && filters.sort !== "default") {
+          const [sortField, sortOrder] = filters.sort.split(",");
+          params.sort = `${sortField},${sortOrder}`;
+        }
 
-        setSessions(response.data);
+        const response = await axios.get<{
+          content: Session[];
+          totalPages: number;
+        }>(`${API_BASE_URL}/api/v1/sessions/public/getSessions`, {
+          params,
+        });
+
+        setSessions(response.data.content);
+        setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error("Error fetching sessions:", error);
       }
     };
 
     fetchSessions();
-  }, [location, type]);
+  }, [filters, currentPage]);
 
   useEffect(() => {
     const newFilters = {
       type: searchParams.get("type") || "",
       status: searchParams.get("status") || "",
       search: searchParams.get("search") || "",
+      location: searchParams.get("location") || "",
+      sort: searchParams.get("sort") || "",
     };
     setFilters(newFilters);
   }, [searchParams]);
@@ -65,32 +81,32 @@ export default function AvailableSessionsPage() {
       params.delete("type");
     }
 
+    if (filters.status) {
+      params.set("status", filters.status);
+    } else {
+      params.delete("status");
+    }
+
+    if (filters.search) {
+      params.set("search", filters.search);
+    } else {
+      params.delete("search");
+    }
+
+    if (filters.location) {
+      params.set("location", filters.location);
+    } else {
+      params.delete("location");
+    }
+
+    if (filters.sort) {
+      params.set("sort", filters.sort);
+    } else {
+      params.delete("sort");
+    }
+
     router.push(`?${params.toString()}`);
   }, [filters]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const itemsPerPage = 20;
-
-  const filteredSessions = sessions.filter((session) => {
-    const matchesType =
-      !filters.type || session.type === filters.type.toUpperCase();
-    const matchesStatus =
-      !filters.status || session.status === filters.status.toUpperCase();
-    const matchesSearch =
-      !filters.search ||
-      session.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-      session.description.toLowerCase().includes(filters.search.toLowerCase());
-
-    return matchesType && matchesStatus && matchesSearch;
-  });
-
-  const totalPages = Math.ceil(filteredSessions.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedSessions = filteredSessions.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
 
   return (
     <div className="w-full py-8 px-20 bg-green-50">
@@ -107,14 +123,14 @@ export default function AvailableSessionsPage() {
 
         <div className="flex-1">
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0">
-            {paginatedSessions.map((session) => (
+            {sessions.map((session) => (
               <li key={session.id}>
                 <SessionCard session={session} />
               </li>
             ))}
           </ul>
 
-          {filteredSessions.length > 0 ? (
+          {sessions.length > 0 ? (
             <div className="mt-8">
               <Pagination
                 currentPage={currentPage}

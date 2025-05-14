@@ -18,12 +18,16 @@ interface FilterSidebarProps {
     type: string;
     status: string;
     search: string;
+    location: string;
+    sort: string;
   };
   setFilters: Dispatch<
     SetStateAction<{
       type: string;
       status: string;
       search: string;
+      location: string;
+      sort: string;
     }>
   >;
   sessionTypes: string[];
@@ -48,6 +52,8 @@ export function FilterSidebar({
       type: "",
       status: "",
       search: "",
+      location: "",
+      sort: "",
     });
     setCurrentPage(1);
   };
@@ -74,15 +80,21 @@ export function FilterSidebar({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              placeholder="Enter location..."
+              value={filters.location}
+              onChange={(e) => handleFilterChange("location", e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="type">Session Type</Label>
             <Select
-              value={filters.type}
+              value={filters.type || "all"}
               onValueChange={(value) => {
-                if (value === "all") {
-                  handleFilterChange("type", "");
-                } else {
-                  handleFilterChange("type", value);
-                }
+                handleFilterChange("type", value === "all" ? "" : value);
               }}
             >
               <SelectTrigger id="type">
@@ -102,13 +114,9 @@ export function FilterSidebar({
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
             <Select
-              value={filters.status}
+              value={filters.status || "all"}
               onValueChange={(value) => {
-                if (value === "all") {
-                  handleFilterChange("status", "");
-                } else {
-                  handleFilterChange("status", value);
-                }
+                handleFilterChange("status", value === "all" ? "" : value);
               }}
             >
               <SelectTrigger id="status">
@@ -118,9 +126,34 @@ export function FilterSidebar({
                 <SelectItem value="all">All Statuses</SelectItem>
                 {sessionStatuses.map((status) => (
                   <SelectItem key={status} value={status}>
-                    {status}
+                    {capitalizeFirstLetter(status)}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="sort">Sort By</Label>
+            <Select
+              value={filters.sort || "default"}
+              onValueChange={(value) => {
+                handleFilterChange("sort", value === "default" ? "" : value);
+              }}
+            >
+              <SelectTrigger id="sort">
+                <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Default</SelectItem>
+                <SelectItem value="startTime,asc">Start Time (Asc)</SelectItem>
+                <SelectItem value="startTime,desc">
+                  Start Time (Desc)
+                </SelectItem>
+                <SelectItem value="endTime,asc">End Time (Asc)</SelectItem>
+                <SelectItem value="endTime,desc">End Time (Desc)</SelectItem>
+                <SelectItem value="capacity,asc">Capacity (Asc)</SelectItem>
+                <SelectItem value="capacity,desc">Capacity (Desc)</SelectItem>
               </SelectContent>
             </Select>
           </div>
