@@ -5,6 +5,7 @@ import com.gymbooking.fitly.dtos.SessionDTO;
 import com.gymbooking.fitly.mappers.GymMapper;
 import com.gymbooking.fitly.mappers.SessionMapper;
 import com.gymbooking.fitly.models.Gym;
+import com.gymbooking.fitly.models.GymStatistics;
 import com.gymbooking.fitly.services.GymService;
 import com.gymbooking.fitly.services.SessionService;
 
@@ -84,6 +85,11 @@ public class GymController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No gym found for user id: " + userId);
         }
         return gymMapper.map(gymOptional.get());
+    }
+
+    @GetMapping("getGymStatistics")
+    public GymStatistics getGymStatistics(@RequestParam Long gymId) {
+        return gymService.getGymStatistics(gymId);
     }
 }
 

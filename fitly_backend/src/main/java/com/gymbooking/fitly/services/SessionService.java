@@ -57,6 +57,14 @@ public class SessionService {
         if (!sessionRepository.existsById(session.getId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No session found with id: " + session.getId());
         }
+        
+        Optional<Session> existingSession = sessionRepository.findById(session.getId());
+        if (existingSession.isPresent()) {
+            Session existing = existingSession.get();
+            session.setGym(existing.getGym());
+            session.setSessionHolders(existing.getSessionHolders());
+        }
+        
         return sessionRepository.save(session);
     }
     

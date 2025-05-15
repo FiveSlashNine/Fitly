@@ -1,6 +1,8 @@
 package com.gymbooking.fitly.services;
 
 import com.gymbooking.fitly.models.Gym;
+import com.gymbooking.fitly.models.GymStatistics;
+import com.gymbooking.fitly.models.Session;
 import com.gymbooking.fitly.models.User;
 import com.gymbooking.fitly.repositories.GymRepository;
 import com.gymbooking.fitly.repositories.UserRepository;
@@ -78,4 +80,24 @@ public class GymService {
             .filter(gym -> gym.getOwnerUser() != null && gym.getOwnerUser().getId().equals(userId))
             .findFirst();
     }
+
+    public GymStatistics getGymStatistics(Long gymId) {
+
+        if (!gymRepository.existsById(gymId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found");
+        }
+        
+    
+        int totalSessions = gymRepository.countSessionsByGymId(gymId);
+        int totalParticipants = gymRepository.countParticipantsByGymId(gymId);
+        int totalRevenue = gymRepository.calculateTotalRevenueByGymId(gymId);
+        
+        GymStatistics statistics = new GymStatistics();
+        statistics.setTotalSessions(totalSessions);
+        statistics.setTotalParticipants(totalParticipants);
+        statistics.setTotalRevenue(totalRevenue);
+        
+        return statistics;
+    }
+    
 }
