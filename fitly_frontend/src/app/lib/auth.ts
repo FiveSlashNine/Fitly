@@ -23,7 +23,7 @@ export async function login(
 
     const { accessToken, refreshToken, userId, needsGym } = response.data;
     const setAuthTokens = useAuthStore.getState().setAuthTokens;
-    const setUserId = useAuthStore.getState().setUserId;
+    const setUserId = useAuthStore.getState().setUserId;  
     const setNeedsGym = useAuthStore.getState().setNeedsGym;
     setAuthTokens(accessToken, refreshToken);
     setUserId(userId);

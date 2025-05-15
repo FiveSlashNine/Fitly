@@ -211,7 +211,7 @@ export default function Home() {
                 σου, ενώ εμείς αναλαμβάνουμε όλη τη δουλειά για σένα.
               </p>
               <Link
-                href="/registerGym"
+                href="/gymDashboard"
                 className="px-4 py-2 border border-emerald-300 rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors font-medium"
               >
                 Εγγραφή

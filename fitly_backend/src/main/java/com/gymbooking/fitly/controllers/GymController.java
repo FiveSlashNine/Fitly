@@ -1,9 +1,13 @@
 package com.gymbooking.fitly.controllers;
 
 import com.gymbooking.fitly.dtos.GymDTO;
+import com.gymbooking.fitly.dtos.SessionDTO;
 import com.gymbooking.fitly.mappers.GymMapper;
+import com.gymbooking.fitly.mappers.SessionMapper;
 import com.gymbooking.fitly.models.Gym;
 import com.gymbooking.fitly.services.GymService;
+import com.gymbooking.fitly.services.SessionService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,8 @@ import java.util.stream.Collectors;
 public class GymController {
     private final GymService gymService;
     private final GymMapper gymMapper;
+    private final SessionService sessionService;
+    private final SessionMapper sessionMapper;
 
     @PostMapping
     public GymDTO createGym(@RequestBody Gym gym,@RequestParam Long userId) {
@@ -62,6 +68,22 @@ public class GymController {
     @DeleteMapping("deleteGym")
     public void deleteGym(@RequestBody Gym gym) {
         gymService.deleteGym(gym);
+    }
+
+    @GetMapping("getSessionsByGymId")
+    public List<SessionDTO> getSessionsByGymId(@RequestParam("id") Long id) {
+        return sessionService.getSessionsByOwnerId(id).stream()
+                .map(sessionMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("getGymByUserId")
+    public GymDTO getGymByUserId(@RequestParam Long userId) {
+        Optional<Gym> gymOptional = gymService.getGymByUserId(userId);
+        if (gymOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No gym found for user id: " + userId);
+        }
+        return gymMapper.map(gymOptional.get());
     }
 }
 

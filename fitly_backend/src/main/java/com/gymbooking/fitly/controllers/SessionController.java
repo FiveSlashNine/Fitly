@@ -57,6 +57,11 @@ public class SessionController {
         return sessionMapper.map(sessionService.updateSession(session));
     }
 
+    @PutMapping("updateSessionStatus")
+    public SessionDTO updateSessionStatus(@RequestParam Long sessionid,@RequestParam Status newStatus){
+        return sessionMapper.map(sessionService.updateSessionStatus(sessionid,newStatus));
+    }
+    
     @PostMapping("createSession")
     public SessionDTO createSession(@RequestBody Session session,@RequestParam Long gymId){
         return sessionMapper.map(sessionService.createSession(session,gymId));
@@ -76,6 +81,13 @@ public class SessionController {
     public List<UserDTO> getSessionUsers(@RequestParam Long sessionId){
         return userService.getSessionUsers(sessionId).stream()
                 .map(userMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("getSessionsByOwnerId")
+    public List<SessionDTO> getSessionsByOwnerId(@RequestParam Long userId) {
+        return sessionService.getSessionsByOwnerId(userId).stream()
+                .map(sessionMapper::map)
                 .collect(Collectors.toList());
     }
 }

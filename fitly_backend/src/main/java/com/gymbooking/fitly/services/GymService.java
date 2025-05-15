@@ -71,4 +71,11 @@ public class GymService {
 
         return gym;
     }
+
+    public Optional<Gym> getGymByUserId(Long userId) {
+        return gymRepository.findAll()
+            .stream()
+            .filter(gym -> gym.getOwnerUser() != null && gym.getOwnerUser().getId().equals(userId))
+            .findFirst();
+    }
 }
