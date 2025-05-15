@@ -17,10 +17,6 @@ export default function RegisterGym() {
   if (!needsGym) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen text-center space-y-4">
-        <h1 className="text-xl font-semibold text-gray-800">
-          Please ensure your are logged in and that your gym owner account is
-          set up without an existing gym.
-        </h1>
         <div className="border-t-4 border-green-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
       </div>
     );
