@@ -7,7 +7,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { sessionTypes } from "../types/session";
-
+import ReserveImageSection from "../../components/ui/ReserveImageSection";
+import { Button } from "@/components/ui/button";
 //ΦΟΡΤΩΝΩ ΔΥΝΑΜΙΚΑ ΤΟΝ ΧΑΡΤΗ ΑΠΟ ΤΟ COMPONENTS/ClientMap
 const DynamicMap = dynamic(() => import("../../components/ClientMap"), {
   ssr: false,
@@ -63,6 +64,7 @@ export default function Home() {
   };
 
   return (
+    
     <div className="min-h-screen flex flex-col bg-white">
       {/* MAIN CONTENT */}
       <main className="flex-grow pt-[120px] pb-16 px-8 bg-gradient-to-b from-white to-green-50">
@@ -161,13 +163,15 @@ export default function Home() {
 
       {/* SERVICES SECTION */}
       <section className="py-12 px-8 bg-emerald-50">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto space-y-8">
+          <ReserveImageSection />
+
           {/* Top banner */}
-          <div className="border border-emerald-200 rounded-lg p-6 mb-8 bg-white shadow-sm">
-            <h3 className="text-lg font-medium text-emerald-700 mb-2">
+          <div className="border border-emerald-200 rounded-lg p-6 bg-white shadow-sm flex flex-col items-center">
+            <h3 className="text-2xl md:text-3xl font-medium text-emerald-700 mb-2 text-center">
               Υπηρεσίες μας
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-center">
               Ανακάλυψε τη λύση που ταιριάζει στις ανάγκες σου με λίγα μόνο
               κλικ! Είτε αναζητάς χώρο για να γυμναστείς είτε προσφέρεις τα δικά
               σου προγράμματα ως επαγγελματίας ή επιχείρηση, εμείς έχουμε τη
@@ -176,6 +180,11 @@ export default function Home() {
               το πρόγραμμα που σου ταιριάζει και ξεκίνα την προπόνησή σου
               σήμερα!
             </p>
+            <Link href="/infoPage" className="w-full flex justify-center">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded mt-6">
+                Μάθε περισσότερα
+              </Button>
+            </Link>
           </div>
 
           {/* Service cards */}
