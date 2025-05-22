@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class GymStatistics {
     private int totalSessions;
     private int totalParticipants;
-    private int totalRevenue;
+    private double totalRevenue;
 }

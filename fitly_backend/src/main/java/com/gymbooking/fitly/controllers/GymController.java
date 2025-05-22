@@ -71,13 +71,6 @@ public class GymController {
         gymService.deleteGym(gym);
     }
 
-    @GetMapping("getSessionsByGymId")
-    public List<SessionDTO> getSessionsByGymId(@RequestParam("id") Long id) {
-        return sessionService.getSessionsByOwnerId(id).stream()
-                .map(sessionMapper::map)
-                .collect(Collectors.toList());
-    }
-
     @GetMapping("getGymByUserId")
     public GymDTO getGymByUserId(@RequestParam Long userId) {
         Optional<Gym> gymOptional = gymService.getGymByUserId(userId);

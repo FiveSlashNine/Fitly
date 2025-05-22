@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gymbooking.fitly.TokenUtil;
 import com.gymbooking.fitly.models.Session;
 import com.gymbooking.fitly.models.User;
+import com.gymbooking.fitly.models.enums.Status;
 import com.gymbooking.fitly.repositories.SessionRepository;
 import com.gymbooking.fitly.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -114,20 +115,27 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No session found with id: " + sessionId);
         }
         Session session = sessionOptional.get();
+        if(session.getStatus()==Status.CANCELLED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Session with id: " + userId + " has been cancelled.");
+        }
+
         User user = userOptional.get();
         if (session.getSessionHolders().contains(user)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already enrolled in the session.");
         }
 
-        if (session.getSessionHolders().size() >= session.getCapacity()) {
+        if (session.getSessionHolders().size() > session.getCapacity()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Session is full.");
         }
 
         user.addSession(session);
         session.addUser(user);
 
+        if(session.getCapacity()==0) session.setStatus(Status.FULL);
+
         sessionRepository.save(session);
-        return userRepository.save(user); }
+        return userRepository.save(user); 
+    }
 
     public List<User> getSessionUsers(Long sessionId) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
@@ -152,6 +160,9 @@ public class UserService {
         }
         user.removeSession(session);
         session.removeUser(user);
+
+        if(session.getStatus()==Status.FULL) session.setStatus(Status.ACTIVE);
+
         sessionRepository.save(session);
         return userRepository.save(user);
     }

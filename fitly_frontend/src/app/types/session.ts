@@ -1,3 +1,5 @@
+import { Gym } from "./gym";
+
 export interface Session {
   id: number;
   title: string;
@@ -10,6 +12,8 @@ export interface Session {
   capacity: number;
   status: string;
   imageUrl: string;
+  gym: Gym;
+  sessionHolder?: [];
 }
 
 export const sessionTypes = [

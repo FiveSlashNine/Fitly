@@ -1,10 +1,17 @@
-import { Session } from "@/app/lib/sessionHandler";
-import { useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { getStatusColor } from "@/app/lib/sessionHandler";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import SessionDetails from "@/components/SessionDetails";
 import { CalendarIcon, ClockIcon, UsersIcon, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { Session } from "@/app/types/session";
 
 interface MySessionsProps {
   sessions: Session[];
@@ -18,21 +25,8 @@ interface SessionCardProps {
 }
 
 function SessionCard({ session, onClick }: SessionCardProps) {
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return "bg-green-500";
-      case "cancelled":
-        return "bg-red-500";
-      case "full":
-        return "bg-blue-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
   return (
-    <Card 
+    <Card
       onClick={onClick}
       className="h-full flex flex-col overflow-hidden p-0 cursor-pointer hover:shadow-md transition-shadow"
     >
@@ -82,7 +76,11 @@ function SessionCard({ session, onClick }: SessionCardProps) {
   );
 }
 
-export default function MySessions({ sessions, loading, onRefresh }: MySessionsProps) {
+export default function MySessions({
+  sessions,
+  loading,
+  onRefresh,
+}: MySessionsProps) {
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
 
   const handleSessionDeleted = () => {
@@ -119,7 +117,9 @@ export default function MySessions({ sessions, loading, onRefresh }: MySessionsP
             />
           </svg>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">No Sessions Found</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          No Sessions Found
+        </h3>
         <p className="text-sm text-gray-500 text-center max-w-sm">
           Check back later or create a new session.
         </p>
@@ -130,7 +130,7 @@ export default function MySessions({ sessions, loading, onRefresh }: MySessionsP
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {sessions.map(session => (
+        {sessions.map((session) => (
           <SessionCard
             key={session.id}
             session={session}

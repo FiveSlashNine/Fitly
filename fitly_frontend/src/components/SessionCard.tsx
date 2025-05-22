@@ -9,23 +9,22 @@ import {
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Session } from "@/app/types/session";
+import { Button } from "./ui/button";
+import { getStatusColor } from "@/app/lib/sessionHandler";
 
 interface SessionCardProps {
   session: Session;
+  buttonLabel?: string;
+  action?: () => void;
 }
 
-export default function SessionCard({ session }: SessionCardProps) {
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return "bg-green-500";
-      case "cancelled":
-        return "bg-red-500";
-      case "full":
-        return "bg-blue-500";
-      default:
-        return "bg-gray-500";
-    }
+export default function SessionCard({
+  session,
+  buttonLabel,
+  action,
+}: SessionCardProps) {
+  const handleClick = () => {
+    if (action) action();
   };
 
   return (
@@ -69,8 +68,9 @@ export default function SessionCard({ session }: SessionCardProps) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="border-t pt-4 pb-4">
+      <CardFooter className="border-t pt-4 pb-4 flex justify-between items-center">
         <div className="text-lg font-semibold">{session.cost}</div>
+        {buttonLabel && <Button onClick={handleClick}>{buttonLabel}</Button>}
       </CardFooter>
     </Card>
   );

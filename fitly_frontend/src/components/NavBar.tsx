@@ -53,6 +53,12 @@ export default function NavBar() {
                   </Link>
                 )}
                 <Link
+                  href="/bookedSessions"
+                  className="text-sm text-gray-600 hover:text-emerald-700 transition-colors"
+                >
+                  Booked Προγράμματα
+                </Link>
+                <Link
                   href="/"
                   onClick={logout}
                   className="text-sm border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition-colors"

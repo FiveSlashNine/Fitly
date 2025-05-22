@@ -1,4 +1,4 @@
-import { GymStatistics } from "@/app/lib/sessionHandler";
+import { GymStatistics } from "@/app/types/gym";
 import { Loader2, TrendingUp, Users, DollarSign, Euro } from "lucide-react";
 
 interface StatisticsTabProps {
@@ -6,7 +6,10 @@ interface StatisticsTabProps {
   isLoading: boolean;
 }
 
-export default function StatisticsTab({ statistics, isLoading }: StatisticsTabProps) {
+export default function StatisticsTab({
+  statistics,
+  isLoading,
+}: StatisticsTabProps) {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-[400px]">
@@ -46,7 +49,9 @@ export default function StatisticsTab({ statistics, isLoading }: StatisticsTabPr
           </div>
           <div>
             <p className="text-sm text-gray-600">Total Participants</p>
-            <p className="text-2xl font-semibold">{statistics.totalParticipants}</p>
+            <p className="text-2xl font-semibold">
+              {statistics.totalParticipants}
+            </p>
           </div>
         </div>
       </div>
@@ -64,4 +69,4 @@ export default function StatisticsTab({ statistics, isLoading }: StatisticsTabPr
       </div>
     </div>
   );
-} 
+}

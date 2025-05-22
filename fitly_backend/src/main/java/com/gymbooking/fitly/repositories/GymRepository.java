@@ -12,12 +12,11 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
     List<Gym> findByLocation(String location);
 
     @Query("SELECT COUNT(s) FROM Session s WHERE s.gym.id = :gymId")
-    int countSessionsByGymId(@Param("gymId") Long gymId);
+    Integer countSessionsByGymId(@Param("gymId") Long gymId);
 
     @Query("SELECT COUNT(DISTINCT u) FROM Session s JOIN s.sessionHolders u WHERE s.gym.id = :gymId")
-    int countParticipantsByGymId(@Param("gymId") Long gymId);
+    Integer countParticipantsByGymId(@Param("gymId") Long gymId);
 
-    @Query("SELECT COALESCE(SUM(CAST(REPLACE(s.cost, '$', '') as integer) * SIZE(s.sessionHolders)), 0) " +
-           "FROM Session s WHERE s.gym.id = :gymId")
-    int calculateTotalRevenueByGymId(@Param("gymId") Long gymId);
+    @Query("SELECT COALESCE(SUM(CAST(REPLACE(s.cost, '$', '') as double) * SIZE(s.sessionHolders)), 0) FROM Session s WHERE s.gym.id = :gymId")
+    Double calculateTotalRevenueByGymId(@Param("gymId") Long gymId);
 }

@@ -1,15 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
+import SessionCard from "@/components/SessionCard";
+import { Pagination } from "@/components/Pagination";
+import { FilterSidebar } from "@/components/FilterSideBar";
 import { useRouter } from "next/navigation";
 import { Session, sessionStatuses, sessionTypes } from "@/app/types/session";
 import { useAuthStore } from "@/app/lib/store";
-import { bookSession, fetchSessions } from "@/app/lib/sessionHandler";
-import { FilterSidebar } from "@/components/FilterSideBar";
-import SessionCard from "@/components/SessionCard";
-import { Pagination } from "@/components/Pagination";
-
-const itemsPerPage = 20;
+import { cancelBooking, fetchSessions } from "@/app/lib/sessionHandler";
 
 export default function AvailableSessionsPage() {
   const router = useRouter();
@@ -27,15 +25,25 @@ export default function AvailableSessionsPage() {
   });
   const { userId, hasHydrated } = useAuthStore();
 
+  const itemsPerPage = 20;
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (userId === -1) {
+      redirect("/");
+    }
+  }, [userId, hasHydrated]);
+
   useEffect(() => {
     if (!hasHydrated) return;
     const fetch = async () => {
       const params: Record<string, any> = {
         location: filters.location,
         type: filters.type,
-        status: "ACTIVE",
+        status: filters.status,
         searchQuery: filters.search,
-        userId: userId === -1 ? null : userId,
+        userId: userId,
+        enrolledOnly: true,
         page: currentPage - 1,
         size: itemsPerPage,
       };
@@ -51,7 +59,7 @@ export default function AvailableSessionsPage() {
     };
 
     fetch();
-  }, [filters, currentPage, userId]);
+  }, [filters, currentPage, userId, hasHydrated]);
 
   useEffect(() => {
     const newFilters = {
@@ -71,6 +79,12 @@ export default function AvailableSessionsPage() {
       params.set("type", filters.type);
     } else {
       params.delete("type");
+    }
+
+    if (filters.status) {
+      params.set("status", filters.status);
+    } else {
+      params.delete("status");
     }
 
     if (filters.search) {
@@ -96,7 +110,7 @@ export default function AvailableSessionsPage() {
 
   return (
     <div className="w-full py-8 px-20 bg-green-50">
-      <h1 className="text-3xl font-bold mb-6">Available Sessions</h1>
+      <h1 className="text-3xl font-bold mb-6">Booked Sessions</h1>
 
       <div className="flex flex-col md:flex-row gap-6">
         <FilterSidebar
@@ -105,7 +119,6 @@ export default function AvailableSessionsPage() {
           sessionTypes={sessionTypes}
           sessionStatuses={sessionStatuses}
           setCurrentPage={setCurrentPage}
-          showStatusFilter={false}
         />
 
         <div className="flex-1">
@@ -114,17 +127,18 @@ export default function AvailableSessionsPage() {
               <li key={session.id}>
                 <SessionCard
                   session={session}
-                  buttonLabel={userId !== -1 ? "Book Session" : undefined}
+                  buttonLabel={userId !== -1 ? "Cancel Booking" : undefined}
                   action={
                     userId !== -1
                       ? async () => {
-                          await bookSession(userId, session.id);
+                          await cancelBooking(userId, session.id);
                           const params: Record<string, any> = {
                             location: filters.location,
                             type: filters.type,
-                            status: "ACTIVE",
+                            status: filters.status,
                             searchQuery: filters.search,
-                            userId: userId === -1 ? null : userId,
+                            userId: userId,
+                            enrolledOnly: true,
                             page: currentPage - 1,
                             size: itemsPerPage,
                           };

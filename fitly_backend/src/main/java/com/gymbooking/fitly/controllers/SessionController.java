@@ -3,9 +3,11 @@ package com.gymbooking.fitly.controllers;
 import com.gymbooking.fitly.dtos.UserDTO;
 import com.gymbooking.fitly.mappers.SessionMapper;
 import com.gymbooking.fitly.mappers.UserMapper;
+import com.gymbooking.fitly.models.Gym;
 import com.gymbooking.fitly.models.Session;
 import com.gymbooking.fitly.models.enums.SessionType;
 import com.gymbooking.fitly.models.enums.Status;
+import com.gymbooking.fitly.repositories.GymRepository;
 import com.gymbooking.fitly.services.SessionService;
 import com.gymbooking.fitly.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class SessionController {
     private final SessionMapper sessionMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final GymRepository gymRepository;
 
     @GetMapping("/public/getSessions")
     public Page<SessionDTO> getSessions(
@@ -38,9 +41,12 @@ public class SessionController {
         @RequestParam(required = false) SessionType type,
         @RequestParam(required = false) Status status,
         @RequestParam(required = false) String searchQuery,
+        @RequestParam(required = false) Long userId,
+        @RequestParam Boolean enrolledOnly,
+        @RequestParam Boolean ownedGymOnly,
         @PageableDefault(size = 10, sort = {"date", "status", "cost", "capacity"}, direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return sessionMapper.toDTOPage(sessionService.getSessions(location, type, status, searchQuery, pageable));
+        return sessionMapper.toDTOPage(sessionService.getSessions(location, type, status, searchQuery, userId, enrolledOnly, ownedGymOnly, pageable));
     }
 
     @GetMapping("getSession")
@@ -53,13 +59,17 @@ public class SessionController {
     }
 
     @PutMapping("updateSession")
-    public SessionDTO updateSession(@RequestBody Session session){
-        return sessionMapper.map(sessionService.updateSession(session));
-    }
+    public SessionDTO updateSession(@RequestBody SessionDTO sessionDTO){
+        Optional<Session> sessionOptional = sessionService.getSessionById(sessionDTO.getId());
+        if (sessionOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No session found with id: " + sessionDTO.getId());
+        }
 
-    @PutMapping("updateSessionStatus")
-    public SessionDTO updateSessionStatus(@RequestParam Long sessionid,@RequestParam Status newStatus){
-        return sessionMapper.map(sessionService.updateSessionStatus(sessionid,newStatus));
+        Session sessionFromDTO = sessionMapper.map(sessionDTO);
+        sessionFromDTO.setSessionHolders(sessionOptional.get().getSessionHolders());
+        sessionFromDTO.setGym(sessionOptional.get().getGym());
+
+        return sessionMapper.map(sessionService.updateSession(sessionFromDTO));
     }
     
     @PostMapping("createSession")
@@ -81,13 +91,6 @@ public class SessionController {
     public List<UserDTO> getSessionUsers(@RequestParam Long sessionId){
         return userService.getSessionUsers(sessionId).stream()
                 .map(userMapper::map)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("getSessionsByOwnerId")
-    public List<SessionDTO> getSessionsByOwnerId(@RequestParam Long userId) {
-        return sessionService.getSessionsByOwnerId(userId).stream()
-                .map(sessionMapper::map)
                 .collect(Collectors.toList());
     }
 }

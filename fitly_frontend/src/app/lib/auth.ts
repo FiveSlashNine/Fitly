@@ -1,6 +1,6 @@
 "use client";
 import { useAuthStore } from "@/app/lib/store";
-import axios from "./axios";
+import axios from "@/app/lib/axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -23,7 +23,7 @@ export async function login(
 
     const { accessToken, refreshToken, userId, needsGym } = response.data;
     const setAuthTokens = useAuthStore.getState().setAuthTokens;
-    const setUserId = useAuthStore.getState().setUserId;  
+    const setUserId = useAuthStore.getState().setUserId;
     const setNeedsGym = useAuthStore.getState().setNeedsGym;
     setAuthTokens(accessToken, refreshToken);
     setUserId(userId);

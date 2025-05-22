@@ -3,8 +3,12 @@ package com.gymbooking.fitly.specifications;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.gymbooking.fitly.models.Session;
+import com.gymbooking.fitly.models.User;
 import com.gymbooking.fitly.models.enums.SessionType;
 import com.gymbooking.fitly.models.enums.Status;
+
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 
 public class SessionSpecification {
     public static Specification<Session> hasLocation(String location) {
@@ -27,5 +31,24 @@ public class SessionSpecification {
                 cb.like(cb.lower(root.get("description")), likePattern)
             );
         };
+    }
+
+    public static Specification<Session> hasSessionHolder(Long userId) {
+        return (root, query, cb) -> {
+            Join<Session, User> join = root.join("sessionHolders", JoinType.INNER);
+            return cb.equal(join.get("id"), userId);
+        };
+    }
+
+    public static Specification<Session> hasNoSessionHolder(Long userId) {
+        return (root, query, cb) -> {
+            Join<Session, User> join = root.join("sessionHolders", JoinType.LEFT);
+            join.on(cb.equal(join.get("id"), userId));
+            return cb.isNull(join.get("id"));
+        };
+    }
+
+    public static Specification<Session> hasGymOwner(Long userId) {
+        return (root, query, cb) -> cb.equal(root.get("gym").get("ownerUser").get("id"), userId);
     }
 }

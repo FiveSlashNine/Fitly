@@ -33,6 +33,7 @@ interface FilterSidebarProps {
   sessionTypes: string[];
   sessionStatuses: string[];
   setCurrentPage: Dispatch<SetStateAction<number>>;
+  showStatusFilter?: boolean;
 }
 
 export function FilterSidebar({
@@ -41,6 +42,7 @@ export function FilterSidebar({
   sessionTypes,
   sessionStatuses,
   setCurrentPage,
+  showStatusFilter = true,
 }: FilterSidebarProps) {
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -111,27 +113,29 @@ export function FilterSidebar({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select
-              value={filters.status || "all"}
-              onValueChange={(value) => {
-                handleFilterChange("status", value === "all" ? "" : value);
-              }}
-            >
-              <SelectTrigger id="status">
-                <SelectValue placeholder="All Statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                {sessionStatuses.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {capitalizeFirstLetter(status)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {showStatusFilter && (
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select
+                value={filters.status || "all"}
+                onValueChange={(value) => {
+                  handleFilterChange("status", value === "all" ? "" : value);
+                }}
+              >
+                <SelectTrigger id="status">
+                  <SelectValue placeholder="All Statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  {sessionStatuses.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {capitalizeFirstLetter(status)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="sort">Sort By</Label>

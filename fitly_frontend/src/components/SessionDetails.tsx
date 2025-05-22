@@ -1,14 +1,24 @@
-import { Session } from "@/app/lib/sessionHandler";
+import { Session } from "@/app/types/session";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import EditSessionForm from "./Forms/EditSessionForm";
-import { deleteSession } from "@/app/lib/sessionHandler";
+import {
+  deleteSession,
+  getStatusColor,
+  updateSession,
+} from "@/app/lib/sessionHandler";
 import { useAuthStore } from "@/app/lib/store";
-import { CalendarIcon, ClockIcon, UsersIcon, XIcon, DumbbellIcon, ChevronDownIcon, Users } from "lucide-react";
-import { updateSessionStatus } from "@/app/lib/sessionHandler";
-import ParticipantsList from './ParticipantsList';
-import { User, getSessionParticipants } from '@/app/lib/sessionHandler';
-
+import {
+  CalendarIcon,
+  ClockIcon,
+  UsersIcon,
+  XIcon,
+  DumbbellIcon,
+  Users,
+} from "lucide-react";
+import ParticipantsList from "./ParticipantsList";
+import { getSessionParticipants } from "@/app/lib/sessionHandler";
+import { User } from "@/app/types/user";
 
 interface SessionDetailsProps {
   session: Session | null;
@@ -18,12 +28,12 @@ interface SessionDetailsProps {
   onSessionDeleted?: () => void;
 }
 
-export default function SessionDetails({ 
-  session, 
-  isOpen, 
-  onClose, 
+export default function SessionDetails({
+  session,
+  isOpen,
+  onClose,
   onSessionUpdated,
-  onSessionDeleted 
+  onSessionDeleted,
 }: SessionDetailsProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -31,7 +41,9 @@ export default function SessionDetails({
   const [showParticipants, setShowParticipants] = useState(false);
   const [participants, setParticipants] = useState<User[]>([]);
   const [isLoadingParticipants, setIsLoadingParticipants] = useState(false);
-  const [participantsError, setParticipantsError] = useState<string | null>(null);
+  const [participantsError, setParticipantsError] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     setIsEditing(false);
@@ -45,28 +57,15 @@ export default function SessionDetails({
 
   const handleDelete = async () => {
     if (!accessToken) return;
-    
+
     try {
-      await deleteSession(session.id, accessToken);
+      await deleteSession(session.id);
       onClose();
       if (onSessionDeleted) {
         onSessionDeleted();
       }
     } catch (error) {
       console.error("Error deleting session:", error);
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return "bg-green-500";
-      case "cancelled":
-        return "bg-red-500";
-      case "full":
-        return "bg-blue-500";
-      default:
-        return "bg-gray-500";
     }
   };
 
@@ -78,9 +77,10 @@ export default function SessionDetails({
 
   const handleStatusChange = async (newStatus: string) => {
     if (!session || !accessToken) return;
-    
+
+    session.status = newStatus;
     try {
-      await updateSessionStatus(session.id, newStatus, accessToken);
+      await updateSession(session);
       if (onSessionUpdated) {
         onSessionUpdated();
       }
@@ -92,17 +92,17 @@ export default function SessionDetails({
 
   const handleViewParticipants = async () => {
     if (!session || !accessToken) return;
-    
+
     setIsLoadingParticipants(true);
     setParticipantsError(null);
-    
+
     try {
-      const users = await getSessionParticipants(session.id, accessToken);
+      const users = await getSessionParticipants(session.id);
       setParticipants(users);
       setShowParticipants(true);
     } catch (error) {
-      console.error('Error fetching participants:', error);
-      setParticipantsError('Failed to load participants');
+      console.error("Error fetching participants:", error);
+      setParticipantsError("Failed to load participants");
     } finally {
       setIsLoadingParticipants(false);
     }
@@ -126,7 +126,7 @@ export default function SessionDetails({
 
   return (
     <>
-      <div 
+      <div
         className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm"
         onClick={handleBackdropClick}
       >
@@ -135,7 +135,11 @@ export default function SessionDetails({
             <div>
               <h2 className="text-xl font-semibold">{session.title}</h2>
               <div className="flex items-center gap-2 mt-1">
-                <span className={`inline-block px-2 py-1 rounded-full text-xs text-white ${getStatusColor(session.status)}`}>
+                <span
+                  className={`inline-block px-2 py-1 rounded-full text-xs text-white ${getStatusColor(
+                    session.status
+                  )}`}
+                >
                   {session.status}
                 </span>
                 <span className="flex items-center gap-1 text-sm text-gray-600">
@@ -144,14 +148,14 @@ export default function SessionDetails({
                 </span>
               </div>
             </div>
-            <button 
+            <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
             >
               <XIcon className="h-5 w-5" />
             </button>
           </div>
-          
+
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4 className="font-medium">Description</h4>
@@ -159,43 +163,47 @@ export default function SessionDetails({
                 {session.description}
               </p>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="h-5 w-5 text-emerald-600" />
                 <span className="text-gray-600">{session.date}</span>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <ClockIcon className="h-5 w-5 text-emerald-600" />
-                <span className="text-gray-600">{session.startTime} - {session.endTime}</span>
+                <span className="text-gray-600">
+                  {session.startTime} - {session.endTime}
+                </span>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <UsersIcon className="h-5 w-5 text-emerald-600" />
-                <span className="text-gray-600">Capacity: {session.capacity} spots</span>
+                <span className="text-gray-600">
+                  Capacity: {session.capacity} spots
+                </span>
               </div>
             </div>
 
             {!showDeleteConfirm ? (
               <div className="flex flex-wrap gap-2 mt-4">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setIsEditing(true)}
                   className="flex-1"
                 >
                   Edit Session
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={handleViewParticipants}
                   className="flex-1"
                   disabled={isLoadingParticipants}
                 >
                   <Users className="w-4 h-4" />
-                  {isLoadingParticipants ? 'Loading...' : 'View Participants'}
+                  {isLoadingParticipants ? "Loading..." : "View Participants"}
                 </Button>
-                <select 
+                <select
                   onChange={(e) => handleStatusChange(e.target.value)}
                   className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   value={session.status}
@@ -204,8 +212,8 @@ export default function SessionDetails({
                   <option value="CANCELLED">Set Cancelled</option>
                   <option value="FULL">Set Full</option>
                 </select>
-                <Button 
-                  variant="destructive" 
+                <Button
+                  variant="destructive"
                   onClick={() => setShowDeleteConfirm(true)}
                   className="flex-1"
                 >
@@ -214,17 +222,19 @@ export default function SessionDetails({
               </div>
             ) : (
               <div className="mt-4 space-y-2">
-                <p className="text-sm text-gray-600">Are you sure you want to delete this session?</p>
+                <p className="text-sm text-gray-600">
+                  Are you sure you want to delete this session?
+                </p>
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={() => setShowDeleteConfirm(false)}
                     className="flex-1"
                   >
                     Cancel
                   </Button>
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     onClick={handleDelete}
                     className="flex-1"
                   >

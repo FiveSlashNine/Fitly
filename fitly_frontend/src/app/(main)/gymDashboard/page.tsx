@@ -1,31 +1,59 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchAllSessionsByUserId, Session, GymStatistics,fetchGymStatistics, getGymIdByUserId } from "@/app/lib/sessionHandler";
-import { useAuthStore } from "@/app/lib/store"; 
+import {
+  fetchGymStatistics,
+  fetchSessions,
+  getGymIdByUserId,
+} from "@/app/lib/sessionHandler";
+import { useAuthStore } from "@/app/lib/store";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2, TrendingUp, Users, DollarSign } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import MySessions from "@/components/ui/Mysessions";
 import CreateSessionForm from "@/components/Forms/CreateSessionForm";
 import SessionDetails from "@/components/SessionDetails";
+import { Session } from "@/app/types/session";
+import { GymStatistics } from "@/app/types/gym";
+import { Pagination } from "@/components/Pagination";
+import { redirect } from "next/navigation";
 
 export default function GymOwnerDashboard() {
-  const { userId, accessToken } = useAuthStore();
+  const { userId, accessToken, hasHydrated } = useAuthStore();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"sessions" | "statistics">("sessions");
+  const [activeTab, setActiveTab] = useState<"sessions" | "statistics">(
+    "sessions"
+  );
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [gymStatistics, setGymStatistics] = useState<GymStatistics | null>(null);
+  const [gymStatistics, setGymStatistics] = useState<GymStatistics | null>(
+    null
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 20;
 
-  const fetchSessions = async () => {
-    console.log("Access token:", accessToken);
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (userId === -1) {
+      redirect("/");
+    }
+  }, [userId, hasHydrated]);
 
-    if (!userId || !accessToken) return;
+  const fetch = async () => {
+    if (!hasHydrated) return;
     setLoading(true);
     try {
-      const data = await fetchAllSessionsByUserId(userId, accessToken);
-      setSessions(data);
+      const params: Record<string, any> = {
+        userId: userId,
+        ownedGymOnly: true,
+        page: currentPage - 1,
+        size: pageSize,
+      };
+
+      const data = await fetchSessions(params);
+      setSessions(data.content);
+      setTotalPages(data.totalPages);
     } catch (error) {
       console.error("Error fetching sessions:", error);
     } finally {
@@ -34,10 +62,10 @@ export default function GymOwnerDashboard() {
   };
 
   const fetchGymStats = async () => {
-    if (!userId || !accessToken) return;
+    if (!hasHydrated) return;
     try {
-      const gymId = await getGymIdByUserId(userId, accessToken);
-      const data = await fetchGymStatistics(gymId, accessToken);
+      const gymId = await getGymIdByUserId(userId);
+      const data = await fetchGymStatistics(gymId);
       setGymStatistics(data);
     } catch (error) {
       console.error("Error fetching gym statistics:", error);
@@ -45,8 +73,8 @@ export default function GymOwnerDashboard() {
   };
 
   useEffect(() => {
-    fetchSessions();
-  }, [userId, accessToken]);
+    fetch();
+  }, [userId, accessToken, currentPage, hasHydrated]);
 
   useEffect(() => {
     if (activeTab === "statistics") {
@@ -66,12 +94,12 @@ export default function GymOwnerDashboard() {
           Create New Session
         </Button>
       </header>
-      
+
       <main className="flex-grow px-8 pb-16">
         <h1 className="text-5xl md:text-6xl font-bold text-emerald-800 mb-12 text-center animate-fadeIn">
           Gym Owner Dashboard
         </h1>
-        
+
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="bg-emerald-50 p-1 rounded-lg mb-10 flex justify-center gap-0 w-full max-w-xl mx-auto">
             <button
@@ -95,7 +123,7 @@ export default function GymOwnerDashboard() {
               Statistics
             </button>
           </div>
-          
+
           <div className="w-full flex justify-center">
             {activeTab === "sessions" && (
               <Card className="w-full max-w-7xl bg-white border border-emerald-100 shadow-lg animate-fadeIn">
@@ -105,11 +133,18 @@ export default function GymOwnerDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4 pb-8">
-                  <MySessions 
-                    sessions={sessions} 
-                    loading={loading} 
-                    onRefresh={fetchSessions}
+                  <MySessions
+                    sessions={sessions}
+                    loading={loading}
+                    onRefresh={fetch}
                   />
+                  <div className="mt-6">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -124,7 +159,9 @@ export default function GymOwnerDashboard() {
                   {!gymStatistics ? (
                     <div className="flex flex-col items-center justify-center py-12">
                       <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-                      <p className="mt-2 text-gray-600">Loading statistics...</p>
+                      <p className="mt-2 text-gray-600">
+                        Loading statistics...
+                      </p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -134,8 +171,12 @@ export default function GymOwnerDashboard() {
                             <TrendingUp className="h-6 w-6 text-emerald-600" />
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Total Sessions</p>
-                            <p className="text-2xl font-semibold text-emerald-900">{gymStatistics.totalSessions}</p>
+                            <p className="text-sm text-gray-600">
+                              Total Sessions
+                            </p>
+                            <p className="text-2xl font-semibold text-emerald-900">
+                              {gymStatistics.totalSessions}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -146,8 +187,12 @@ export default function GymOwnerDashboard() {
                             <Users className="h-6 w-6 text-blue-600" />
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Total Participants</p>
-                            <p className="text-2xl font-semibold text-emerald-900">{gymStatistics.totalParticipants}</p>
+                            <p className="text-sm text-gray-600">
+                              Total Participants
+                            </p>
+                            <p className="text-2xl font-semibold text-emerald-900">
+                              {gymStatistics.totalParticipants}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -158,8 +203,12 @@ export default function GymOwnerDashboard() {
                             <DollarSign className="h-6 w-6 text-purple-600" />
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Total Revenue</p>
-                            <p className="text-2xl font-semibold text-emerald-900">${gymStatistics.totalRevenue}</p>
+                            <p className="text-sm text-gray-600">
+                              Total Revenue
+                            </p>
+                            <p className="text-2xl font-semibold text-emerald-900">
+                              ${gymStatistics.totalRevenue}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -169,19 +218,19 @@ export default function GymOwnerDashboard() {
               </Card>
             )}
           </div>
-          
+
           {showCreateModal && (
-            <CreateSessionForm 
-              onClose={() => setShowCreateModal(false)} 
-              onSessionCreated={fetchSessions}
+            <CreateSessionForm
+              onClose={() => setShowCreateModal(false)}
+              onSessionCreated={fetch}
             />
           )}
 
-          <SessionDetails 
+          <SessionDetails
             session={selectedSession}
             isOpen={!!selectedSession}
             onClose={() => setSelectedSession(null)}
-            onSessionDeleted={fetchSessions}
+            onSessionDeleted={fetch}
           />
         </div>
       </main>
