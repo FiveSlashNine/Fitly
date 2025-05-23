@@ -1,4 +1,10 @@
-import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
+import {
+  BuildingIcon,
+  CalendarIcon,
+  ClockIcon,
+  MapPinIcon,
+  UsersIcon,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -52,6 +58,14 @@ export default function SessionCard({
       <CardContent className="flex-grow">
         <p className="mb-4 text-sm">{session.description}</p>
         <div className="space-y-2">
+          <div className="flex items-center text-sm">
+            <BuildingIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+            <span className="font-medium">{session.gym.name}</span>
+          </div>
+          <div className="flex items-center text-sm">
+            <MapPinIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+            <span>{session.gym.location}</span>
+          </div>
           <div className="flex items-center text-sm">
             <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
             <span>{session.date}</span>
