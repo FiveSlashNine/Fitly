@@ -1,13 +1,10 @@
 package com.gymbooking.fitly.controllers;
 
 import com.gymbooking.fitly.dtos.GymDTO;
-import com.gymbooking.fitly.dtos.SessionDTO;
 import com.gymbooking.fitly.mappers.GymMapper;
-import com.gymbooking.fitly.mappers.SessionMapper;
 import com.gymbooking.fitly.models.Gym;
 import com.gymbooking.fitly.models.GymStatistics;
 import com.gymbooking.fitly.services.GymService;
-import com.gymbooking.fitly.services.SessionService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,8 +21,6 @@ import java.util.stream.Collectors;
 public class GymController {
     private final GymService gymService;
     private final GymMapper gymMapper;
-    private final SessionService sessionService;
-    private final SessionMapper sessionMapper;
 
     @PostMapping
     public GymDTO createGym(@RequestBody Gym gym,@RequestParam Long userId) {

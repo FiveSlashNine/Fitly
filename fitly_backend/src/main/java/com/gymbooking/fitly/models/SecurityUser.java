@@ -86,4 +86,11 @@ public class SecurityUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Boolean isGymOwner() {
+        if(user!=null) {
+            return user.getIsGymOwner();
+        }
+        return false;
+    }
 }

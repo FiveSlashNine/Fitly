@@ -3,11 +3,9 @@ package com.gymbooking.fitly.controllers;
 import com.gymbooking.fitly.dtos.UserDTO;
 import com.gymbooking.fitly.mappers.SessionMapper;
 import com.gymbooking.fitly.mappers.UserMapper;
-import com.gymbooking.fitly.models.Gym;
 import com.gymbooking.fitly.models.Session;
 import com.gymbooking.fitly.models.enums.SessionType;
 import com.gymbooking.fitly.models.enums.Status;
-import com.gymbooking.fitly.repositories.GymRepository;
 import com.gymbooking.fitly.services.SessionService;
 import com.gymbooking.fitly.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,6 @@ public class SessionController {
     private final SessionMapper sessionMapper;
     private final UserService userService;
     private final UserMapper userMapper;
-    private final GymRepository gymRepository;
 
     @GetMapping("/public/getSessions")
     public Page<SessionDTO> getSessions(
