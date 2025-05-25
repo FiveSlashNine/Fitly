@@ -1,6 +1,6 @@
 import axios from "@/app/lib/axios";
 import { Session } from "../types/session";
-import { GymStatistics } from "../types/gym";
+import { Gym, GymStatistics } from "../types/gym";
 import { User } from "../types/user";
 
 //KARTELA ME OLA TA API CALLS
@@ -180,3 +180,46 @@ export const getStatusColor = (status: string) => {
       return "bg-gray-500";
   }
 };
+
+//ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΠΑΙΡΝΕΙ ΤΑ ΣΤΟΙΧΕΙΑ ΤΟΥ GYM
+export async function getGymDetails(gymId:number ):Promise<Gym>{
+  const response = await axios.get(`${API_BASE_URL}/api/v1/gyms/getGymById`,{
+    params:{id:gymId}
+  })
+  console.log("Gym details:", response.data);
+  return response.data;
+}
+
+//ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΑΛΛΑΓΗ ΤΩΝ ΣΤΟΙΧΕΙΩΝ ΤΟΥ GYM
+export async function updateGymDetails(id: number, name: string, location: string): Promise<Gym> {
+  const response = await axios.put(
+    `${API_BASE_URL}/api/v1/gyms/updateGymCredentialsWithId`,
+    {},  
+    {
+      params: {
+        id: id,
+        gymname: name,     
+        gymLocation: location
+      }
+    }
+  );
+  
+  console.log("sessionHandler - Update response:", response.data);
+  return response.data;
+}
+
+//ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΔΙΑΓΡΑΦΕΙ ΤΟ GYM ΑΠΟ ΤΟΝ ΧΡΗΣΤΗ ΟΧΙ ΟΛΟ ΤΟΝ ΧΡΗΣΤΗ
+export async function deleteGym(gym:Gym):Promise<void>{
+  await axios.delete(`${API_BASE_URL}/api/v1/gyms/deleteGym`,{
+    data:gym
+  })
+} 
+
+//ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΠΑΙΡΝΕΙ ΤΑ ΣΤΟΙΧΕΙΑ ΤΟΥ ΧΡΗΣΤΗ
+export async function getUserDetails(userId:number):Promise<User>{
+  const response = await axios.get(`${API_BASE_URL}/api/v1/users/getUserById`,{
+    params:{id:userId}
+  })
+  return response.data;
+}
+

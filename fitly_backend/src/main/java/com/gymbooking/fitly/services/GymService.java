@@ -22,13 +22,14 @@ public class GymService {
     private final GymRepository gymRepository;
     private final UserRepository userRepository;
 
-    public Gym createGym(Gym gym, Long userId){
-        if(!isValidGymName(gym.getName())) {
+    public Gym createGym(Gym gym, Long userId) {
+        if (!isValidGymName(gym.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid name format");
         }
 
         Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with id: " + userId);
+        if (user.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with id: " + userId);
         gym.setOwnerUser(user.get());
         return gymRepository.save(gym);
     }
@@ -60,24 +61,26 @@ public class GymService {
         return gymRepository.save(gym);
     }
 
-    public Gym updateGymById(Long id,String location,String name) {
+    public Gym updateGymById(Long id, String location, String name) {
         Optional<Gym> gymOptional = gymRepository.findById(id);
         if (gymOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No gym found with id: " + id);
         }
 
         Gym gym = gymOptional.get();
-        if (location!=null) gym.setLocation(location);
-        if (name!=null) gym.setName(name);
+        if (location != null)
+            gym.setLocation(location);
+        if (name != null)
+            gym.setName(name);
 
-        return gym;
+        return gymRepository.save(gym);
     }
 
     public Optional<Gym> getGymByUserId(Long userId) {
         return gymRepository.findAll()
-            .stream()
-            .filter(gym -> gym.getOwnerUser() != null && gym.getOwnerUser().getId().equals(userId))
-            .findFirst();
+                .stream()
+                .filter(gym -> gym.getOwnerUser() != null && gym.getOwnerUser().getId().equals(userId))
+                .findFirst();
     }
 
     public GymStatistics getGymStatistics(Long gymId) {
@@ -85,18 +88,17 @@ public class GymService {
         if (!gymRepository.existsById(gymId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found");
         }
-        
-    
+
         int totalSessions = gymRepository.countSessionsByGymId(gymId);
         int totalParticipants = gymRepository.countParticipantsByGymId(gymId);
         double totalRevenue = gymRepository.calculateTotalRevenueByGymId(gymId);
-        
+
         GymStatistics statistics = new GymStatistics();
         statistics.setTotalSessions(totalSessions);
         statistics.setTotalParticipants(totalParticipants);
         statistics.setTotalRevenue(totalRevenue);
-        
+
         return statistics;
     }
-    
+
 }

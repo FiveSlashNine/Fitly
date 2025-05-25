@@ -4,6 +4,10 @@ import {
   fetchGymStatistics,
   fetchSessions,
   getGymIdByUserId,
+  getGymDetails,
+  getUserDetails,
+  deleteGym,
+  updateGymDetails,
 } from "@/app/lib/sessionHandler";
 import { useAuthStore } from "@/app/lib/store";
 import { Button } from "@/components/ui/button";
@@ -11,14 +15,19 @@ import { Plus, Loader2, TrendingUp, Users, DollarSign } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import MySessions from "@/components/ui/Mysessions";
 import CreateSessionForm from "@/components/Forms/CreateSessionForm";
-import SessionDetails from "@/components/SessionDetails";
 import { Session } from "@/app/types/session";
-import { GymStatistics } from "@/app/types/gym";
+import { Gym, GymStatistics } from "@/app/types/gym";
 import { Pagination } from "@/components/Pagination";
 import { redirect } from "next/navigation";
+import SettingsDropdown from "@/components/ui/SettingsDropdown";
+import GymDetails from "@/components/ui/GymDetails";
+import { User } from "@/app/types/user";
+import { useRouter } from "next/navigation";
+import EditGymForm from "@/components/Forms/EditGymForm";
+import DeleteConfirmationMessage from "@/components/ui/DeleteConfirmationMessage";
 
 export default function GymOwnerDashboard() {
-  const { userId, accessToken, hasHydrated } = useAuthStore();
+  const { userId, accessToken, hasHydrated,setIsGymOwner,setNeedsGym } = useAuthStore();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"sessions" | "statistics">(
@@ -31,7 +40,13 @@ export default function GymOwnerDashboard() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [gymDetails, setGymDetails] = useState<Gym | null>(null);
+  const [userDetails, setUserDetails] = useState<User | null>(null);
+  const [showGymDetails, setShowGymDetails] = useState(false);
+  const [showEditGymModal, setShowEditGymModal] = useState(false);
+  const [ showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const pageSize = 20;
+  const router = useRouter();
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -41,6 +56,7 @@ export default function GymOwnerDashboard() {
   }, [userId, hasHydrated]);
 
   const fetch = async () => {
+    console.log(accessToken);
     if (!hasHydrated) return;
     setLoading(true);
     try {
@@ -82,17 +98,61 @@ export default function GymOwnerDashboard() {
     }
   }, [activeTab]);
 
+  const fetchGymDetails = async () => {
+    try {
+      const gymId = await getGymIdByUserId(userId);
+      const userDetails = await getUserDetails(userId);
+      const details = await getGymDetails(gymId);
+      setGymDetails(details);
+      setUserDetails(userDetails);
+      setShowGymDetails(true);
+    } catch (error) {
+      console.error("Error fetching gym details:", error);
+    }
+  };
+
+  const handleEditDetails = async (updatedGym: Gym) => {
+    try{
+      await updateGymDetails(updatedGym.id,updatedGym.name,updatedGym.location);
+    }catch(error){
+      console.error("Error updating gym details:", error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      const gymId = await getGymIdByUserId(userId);
+      const details = await getGymDetails(gymId);
+      await deleteGym(details);
+      setNeedsGym(true);
+      router.push("/");
+    } catch (error) {
+      console.error("Error deleting gym:", error);
+    }
+  };
+
+  const handleDeleteConfirmation = async () => {
+    setShowDeleteConfirmation(true);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-green-50">
-      <header className="flex justify-between items-center px-8 pt-8 pb-2">
+      <header className="flex items-center justify-between px-8 pt-8 pb-2">
         <div className="w-32"></div>
-        <Button
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-10 py-6 text-xl font-bold shadow-lg transition-all duration-300"
-          onClick={() => setShowCreateModal(true)}
-        >
-          <Plus className="w-6 h-6" />
-          Create New Session
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-10 py-6 text-xl font-bold shadow-lg transition-all duration-300"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <Plus className="w-6 h-6" />
+            Create New Session
+          </Button>
+          <SettingsDropdown 
+            onViewDetails={fetchGymDetails}
+            onEditDetails={() => setShowEditGymModal(true)}
+            onDeleteAccount={handleDeleteConfirmation}
+          />
+        </div>
       </header>
 
       <main className="flex-grow px-8 pb-16">
@@ -225,15 +285,37 @@ export default function GymOwnerDashboard() {
               onSessionCreated={fetch}
             />
           )}
-
-          <SessionDetails
-            session={selectedSession}
-            isOpen={!!selectedSession}
-            onClose={() => setSelectedSession(null)}
-            onSessionDeleted={fetch}
-          />
         </div>
       </main>
+
+      <GymDetails
+        isOpen={showGymDetails}
+        onClose={() => setShowGymDetails(false)}
+        gymDetails={gymDetails}
+        userDetails={userDetails}
+        loading={loading}
+      />
+       {showEditGymModal && gymDetails && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/30  bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg  border-4 border-emerald-800 p-6 w-full max-w-md">
+            <h2 className="text-2xl font-bold text-emerald-800 mb-4">Επεξεργασία Στοιχείων</h2>
+            <EditGymForm
+              gym={gymDetails}
+              onUpdate={handleEditDetails}
+              onSuccess={() => setShowEditGymModal(false)}
+              onCancel={() => setShowEditGymModal(false)}
+            />
+          </div>
+        </div>
+      )}
+       <DeleteConfirmationMessage
+        isOpen={showDeleteConfirmation}
+        onClose={() => setShowDeleteConfirmation(false)}
+        onConfirm={() => {
+          setShowDeleteConfirmation(false);
+          handleDeleteAccount();
+        }}
+      />
     </div>
   );
 }

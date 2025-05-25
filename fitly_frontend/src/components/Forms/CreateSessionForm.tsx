@@ -90,11 +90,9 @@ export default function CreateSessionForm({
     setError(null);
 
     try {
-      // First get the gym ID for this user
       const gymId = await getGymIdByUserId(userId);
       console.log("Retrieved gymId:", gymId);
 
-      // Map form data to Session object
       const newSession: Omit<Session, "id" | "gym" | "sessionHolder"> = {
         title: formData.title,
         description: formData.description,
@@ -110,10 +108,8 @@ export default function CreateSessionForm({
 
       console.log("Submitting session data:", newSession);
 
-      // Make the API call with the correct gym ID
       await createSession(newSession, gymId);
 
-      // Close the form and refresh the sessions list
       onClose();
       if (onSessionCreated) {
         onSessionCreated();
