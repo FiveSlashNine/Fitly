@@ -34,7 +34,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/signin"
+                    href="/auth/signin"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
                     Σύνδεση Αθλούμενου
@@ -42,7 +42,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/signUpUser"
+                    href="/auth/signup"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
                     Εγγραφή Αθλούμενου
@@ -69,7 +69,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/signin"
+                    href="/auth/signin"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
                     Σύνδεση Γυμναστηρίου
@@ -77,7 +77,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/signUpGym"
+                    href="/auth/signup"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
                     Εγγραφή Γυμναστηρίου
@@ -123,35 +123,34 @@ export default function Footer() {
             {/* SOCIAL MEDIA */}
             <div>
               <h3 className="font-medium text-lg mb-4 text-emerald-800">
-                {" "}
-                <FontAwesomeIcon icon={faShareNodes} className="w-8 h-8" />{" "}
+                <FontAwesomeIcon icon={faShareNodes} className="w-8 h-8" />
                 Follow us
               </h3>
               <div className="flex gap-6">
-                <a
+                <Link
                   href="https://github.com/Periklas712"
                   className="text-gray-600 hover:text-emerald-700 transition-colors text-xl"
                 >
                   <FontAwesomeIcon icon={faGithub} className="w-8 h-8" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://github.com/FiveSlashNine"
                   className="text-gray-600 hover:text-emerald-700 transition-colors text-xl"
                 >
                   <FontAwesomeIcon icon={faGithub} className="w-8 h-8" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://www.linkedin.com/in/kristi-zefi/"
                   className="text-gray-600 hover:text-emerald-700 transition-colors text-xl"
                 >
                   <FontAwesomeIcon icon={faLinkedin} className="w-8 h-8" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://gr.linkedin.com/in/periklis-giannikos-403718252"
                   className="text-gray-600 hover:text-emerald-700 transition-colors text-xl"
                 >
                   <FontAwesomeIcon icon={faLinkedin} className="w-8 h-8" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

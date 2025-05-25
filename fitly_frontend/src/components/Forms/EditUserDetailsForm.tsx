@@ -1,22 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { getUserDetails, UpdateUserDetails } from "@/app/lib/sessionHandler";
+import { useAuthStore } from "@/app/lib/store";
+import { User } from "@/app/types/user";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { register } from "@/app/lib/auth";
-import { useAuthStore } from "@/app/lib/store";
+import { Eye, EyeOff } from "lucide-react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
-interface SignUpFormProps {
-  onToggleForm: () => void;
-}
-
-export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
+export default function EditUserDetailsForms() {
+  const { userId, hasHydrated } = useAuthStore();
+  const [user, setUser] = useState<User>();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setNeedsGym } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (userId === -1) {
+      redirect("/");
+    }
+  }, [userId, hasHydrated]);
+
+  useEffect(() => {
+    if (!hasHydrated || userId === -1) return;
+
+    const fetchUserDetails = async () => {
+      setUser(await getUserDetails(userId));
+    };
+
+    fetchUserDetails();
+  }, [userId, hasHydrated]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,45 +43,50 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
     setError(null);
     const formData = new FormData(event.currentTarget);
 
-    const newUser = {
+    const updatedUser: User = {
+      ...user!,
       username: formData.get("username") as string,
       phoneNumber: formData.get("phoneNumber") as string,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-      isGymOwner: formData.get("ownsGym") !== null,
-      roles: "Simple",
-      sessions: [] as any[],
+      password: (formData.get("password") as string) || undefined,
     };
 
+    setLoading(true);
     try {
-      const result = await register(newUser);
-
-      if (result.success) {
-        setNeedsGym(newUser.isGymOwner);
-        onToggleForm();
-      } else {
-        setError(
-          result.error ??
-            "Registration failed. Please check your details and try again."
-        );
-      }
+      const res = await UpdateUserDetails(updatedUser);
+      setUser(res);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   }
 
+  if (loading || !user) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
       {error && <div className="text-red-600 text-sm">{error}</div>}
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          defaultValue={user.email}
+          disabled
+        />
+      </div>
       <div className="space-y-2">
         <Label htmlFor="username">Username</Label>
         <Input
           id="username"
           name="username"
-          placeholder="JohnDoe"
+          defaultValue={user.username}
           pattern="[a-zA-Z0-9._]{1,20}"
-          required
           title="Username must have at least 1 character and contain only letters, numbers, underscores or hyphens."
+          required
         />
       </div>
       <div className="space-y-2">
@@ -74,30 +95,23 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
           id="phoneNumber"
           name="phoneNumber"
           type="tel"
-          placeholder="6912345678"
           pattern="[0-9]{0,14}$"
+          defaultValue={user.phoneNumber}
+          title="Phone Numbers Can Contain Up to 14 Digits (Not Characters)"
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="you@example.com"
-          required
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">
+          New Password (leave blank to keep current)
+        </Label>
         <div className="relative">
           <Input
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
+            placeholder="******"
             minLength={6}
-            required
           />
           <Button
             type="button"
@@ -117,29 +131,14 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
           </Button>
         </div>
       </div>
-      <div className="flex items-center space-x-2 pt-2">
-        <Checkbox id="ownsGym" name="ownsGym" />
-        <Label
-          htmlFor="ownsGym"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      <div className="flex justify-center pt-4">
+        <Button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 px-10"
+          disabled={loading}
         >
-          Owns a gym
-        </Label>
-      </div>
-      <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-        Create Account
-      </Button>
-      <div className="text-center text-sm">
-        <p>
-          Already have an account?{" "}
-          <Button
-            variant="link"
-            className="h-auto p-0 text-green-600"
-            onClick={onToggleForm}
-          >
-            Sign in
-          </Button>
-        </p>
+          {loading ? "Saving..." : "Save Changes"}
+        </Button>
       </div>
     </form>
   );

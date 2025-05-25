@@ -21,7 +21,8 @@ export async function login(
       { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     );
 
-    const { accessToken, refreshToken, userId, needsGym, isGymOwner } = response.data;
+    const { accessToken, refreshToken, userId, needsGym, isGymOwner } =
+      response.data;
     const setAuthTokens = useAuthStore.getState().setAuthTokens;
     const setUserId = useAuthStore.getState().setUserId;
     const setNeedsGym = useAuthStore.getState().setNeedsGym;

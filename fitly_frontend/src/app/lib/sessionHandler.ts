@@ -68,7 +68,6 @@ export const fetchSessions = async ({
 
 //ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΑΛΛΑΞΕΙ ΜΙΑ ΣΥΝΕΔΡΙΑ
 export async function updateSession(session: Session): Promise<Session> {
-  console.log(session, "KEK");
   const response = await axios.put(
     `${API_BASE_URL}/api/v1/sessions/updateSession`,
     session
@@ -182,44 +181,55 @@ export const getStatusColor = (status: string) => {
 };
 
 //ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΠΑΙΡΝΕΙ ΤΑ ΣΤΟΙΧΕΙΑ ΤΟΥ GYM
-export async function getGymDetails(gymId:number ):Promise<Gym>{
-  const response = await axios.get(`${API_BASE_URL}/api/v1/gyms/getGymById`,{
-    params:{id:gymId}
-  })
+export async function getGymDetails(gymId: number): Promise<Gym> {
+  const response = await axios.get(`${API_BASE_URL}/api/v1/gyms/getGymById`, {
+    params: { id: gymId },
+  });
   console.log("Gym details:", response.data);
   return response.data;
 }
 
 //ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΑΛΛΑΓΗ ΤΩΝ ΣΤΟΙΧΕΙΩΝ ΤΟΥ GYM
-export async function updateGymDetails(id: number, name: string, location: string): Promise<Gym> {
+export async function updateGymDetails(
+  id: number,
+  name: string,
+  location: string
+): Promise<Gym> {
   const response = await axios.put(
     `${API_BASE_URL}/api/v1/gyms/updateGymCredentialsWithId`,
-    {},  
+    {},
     {
       params: {
         id: id,
-        gymname: name,     
-        gymLocation: location
-      }
+        gymname: name,
+        gymLocation: location,
+      },
     }
   );
-  
+
   console.log("sessionHandler - Update response:", response.data);
   return response.data;
 }
 
 //ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΔΙΑΓΡΑΦΕΙ ΤΟ GYM ΑΠΟ ΤΟΝ ΧΡΗΣΤΗ ΟΧΙ ΟΛΟ ΤΟΝ ΧΡΗΣΤΗ
-export async function deleteGym(gym:Gym):Promise<void>{
-  await axios.delete(`${API_BASE_URL}/api/v1/gyms/deleteGym`,{
-    data:gym
-  })
-} 
+export async function deleteGym(gym: Gym): Promise<void> {
+  await axios.delete(`${API_BASE_URL}/api/v1/gyms/deleteGym`, {
+    data: gym,
+  });
+}
 
 //ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΝΑ ΠΑΙΡΝΕΙ ΤΑ ΣΤΟΙΧΕΙΑ ΤΟΥ ΧΡΗΣΤΗ
-export async function getUserDetails(userId:number):Promise<User>{
-  const response = await axios.get(`${API_BASE_URL}/api/v1/users/getUserById`,{
-    params:{id:userId}
-  })
+export async function getUserDetails(userId: number): Promise<User> {
+  const response = await axios.get(`${API_BASE_URL}/api/v1/users/getUserById`, {
+    params: { id: userId },
+  });
   return response.data;
 }
 
+export async function UpdateUserDetails(user: User): Promise<User> {
+  const response = await axios.put(
+    `${API_BASE_URL}/api/v1/users/updateUser`,
+    user
+  );
+  return response.data;
+}

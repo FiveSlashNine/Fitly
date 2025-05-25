@@ -3,5 +3,6 @@ export interface User {
   username: string;
   phoneNumber: string;
   email: string;
+  password?: string;
   isGymOwner: boolean;
 }
