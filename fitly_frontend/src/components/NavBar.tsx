@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthStore } from "@/app/lib/store";
+import { CircleUser } from "lucide-react";
+import { getGymIdByUserId } from "@/app/lib/sessionHandler";
 
 export default function NavBar() {
   const { accessToken, needsGym, setAuthTokens, logout } = useAuthStore();
@@ -58,6 +60,13 @@ export default function NavBar() {
                 >
                   Booked Προγράμματα
                 </Link>
+                  <Link
+                    href="/gymDashboard"
+                    className="text-sm text-gray-600 hover:text-emerald-700 transition-colors"
+                  title="Προφίλ Γυμναστηρίου"
+                >
+                  <CircleUser className="w-10 h-10" />
+                </Link>
                 <Link
                   href="/"
                   onClick={logout}
@@ -65,6 +74,7 @@ export default function NavBar() {
                 >
                   Αποσύνδεση
                 </Link>
+            
               </>
             ) : (
               <>
