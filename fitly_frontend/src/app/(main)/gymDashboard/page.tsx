@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   fetchGymStatistics,
   fetchSessions,
@@ -27,14 +27,13 @@ import EditGymForm from "@/components/Forms/EditGymForm";
 import DeleteConfirmationMessage from "@/components/ui/DeleteConfirmationMessage";
 
 export default function GymOwnerDashboard() {
-  const { userId, accessToken, hasHydrated,setIsGymOwner,setNeedsGym } = useAuthStore();
+  const { userId, hasHydrated, setNeedsGym } = useAuthStore();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"sessions" | "statistics">(
     "sessions"
   );
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [gymStatistics, setGymStatistics] = useState<GymStatistics | null>(
     null
   );
@@ -44,7 +43,7 @@ export default function GymOwnerDashboard() {
   const [userDetails, setUserDetails] = useState<User | null>(null);
   const [showGymDetails, setShowGymDetails] = useState(false);
   const [showEditGymModal, setShowEditGymModal] = useState(false);
-  const [ showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const pageSize = 20;
   const router = useRouter();
 
@@ -55,12 +54,11 @@ export default function GymOwnerDashboard() {
     }
   }, [userId, hasHydrated]);
 
-  const fetch = async () => {
-    console.log(accessToken);
+  const fetch = useCallback(async () => {
     if (!hasHydrated) return;
     setLoading(true);
     try {
-      const params: Record<string, any> = {
+      const params: Record<string, string | number | boolean> = {
         userId: userId,
         ownedGymOnly: true,
         page: currentPage - 1,
@@ -75,28 +73,28 @@ export default function GymOwnerDashboard() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchGymStats = async () => {
-    if (!hasHydrated) return;
-    try {
-      const gymId = await getGymIdByUserId(userId);
-      const data = await fetchGymStatistics(gymId);
-      setGymStatistics(data);
-    } catch (error) {
-      console.error("Error fetching gym statistics:", error);
-    }
-  };
+  }, [userId, hasHydrated, currentPage, pageSize]);
 
   useEffect(() => {
     fetch();
-  }, [userId, accessToken, currentPage, hasHydrated]);
+  }, [fetch]);
 
   useEffect(() => {
+    const fetchGymStats = async () => {
+      if (!hasHydrated) return;
+      try {
+        const gymId = await getGymIdByUserId(userId);
+        const data = await fetchGymStatistics(gymId);
+        setGymStatistics(data);
+      } catch (error) {
+        console.error("Error fetching gym statistics:", error);
+      }
+    };
+
     if (activeTab === "statistics") {
       fetchGymStats();
     }
-  }, [activeTab]);
+  }, [activeTab, hasHydrated, userId]);
 
   const fetchGymDetails = async () => {
     try {
@@ -112,9 +110,13 @@ export default function GymOwnerDashboard() {
   };
 
   const handleEditDetails = async (updatedGym: Gym) => {
-    try{
-      await updateGymDetails(updatedGym.id,updatedGym.name,updatedGym.location);
-    }catch(error){
+    try {
+      await updateGymDetails(
+        updatedGym.id,
+        updatedGym.name,
+        updatedGym.location
+      );
+    } catch (error) {
       console.error("Error updating gym details:", error);
     }
   };
@@ -147,7 +149,7 @@ export default function GymOwnerDashboard() {
             <Plus className="w-6 h-6" />
             Create New Session
           </Button>
-          <SettingsDropdown 
+          <SettingsDropdown
             onViewDetails={fetchGymDetails}
             onEditDetails={() => setShowEditGymModal(true)}
             onDeleteAccount={handleDeleteConfirmation}
@@ -295,10 +297,12 @@ export default function GymOwnerDashboard() {
         userDetails={userDetails}
         loading={loading}
       />
-       {showEditGymModal && gymDetails && (
+      {showEditGymModal && gymDetails && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/30  bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg  border-4 border-emerald-800 p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-emerald-800 mb-4">Επεξεργασία Στοιχείων</h2>
+            <h2 className="text-2xl font-bold text-emerald-800 mb-4">
+              Επεξεργασία Στοιχείων
+            </h2>
             <EditGymForm
               gym={gymDetails}
               onUpdate={handleEditDetails}
@@ -308,7 +312,7 @@ export default function GymOwnerDashboard() {
           </div>
         </div>
       )}
-       <DeleteConfirmationMessage
+      <DeleteConfirmationMessage
         isOpen={showDeleteConfirmation}
         onClose={() => setShowDeleteConfirmation(false)}
         onConfirm={() => {

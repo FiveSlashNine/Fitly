@@ -54,8 +54,10 @@ export default function EditUserDetailsForms() {
     try {
       const res = await UpdateUserDetails(updatedUser);
       setUser(res);
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+    } catch (err: unknown) {
+      if (err instanceof Error)
+        setError(err.message || "An unexpected error occurred.");
+      setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }

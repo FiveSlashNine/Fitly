@@ -38,17 +38,18 @@ export const fetchSessions = async ({
   size = 10,
 }: FetchSessionsParams = {}): Promise<PaginatedResponse<Session>> => {
   try {
-    const params: Record<string, any> = {
-      location,
-      type,
-      status,
-      searchQuery,
-      userId: userId === -1 ? null : userId,
-      enrolledOnly,
-      ownedGymOnly,
-      page,
-      size,
-    };
+    const params: Record<string, string | number | null | boolean | undefined> =
+      {
+        location,
+        type,
+        status,
+        searchQuery,
+        userId: userId === -1 ? null : userId,
+        enrolledOnly,
+        ownedGymOnly,
+        page,
+        size,
+      };
 
     if (sort && sort !== "default") {
       params.sort = sort;

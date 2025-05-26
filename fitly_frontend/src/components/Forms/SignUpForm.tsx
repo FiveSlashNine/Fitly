@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { register } from "@/app/lib/auth";
 import { useAuthStore } from "@/app/lib/store";
+import { Session } from "@/app/types/session";
 
 interface SignUpFormProps {
   onToggleForm: () => void;
@@ -34,7 +35,7 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
       password: formData.get("password") as string,
       isGymOwner: formData.get("ownsGym") !== null,
       roles: "Simple",
-      sessions: [] as any[],
+      sessions: [] as Session[],
     };
 
     try {
@@ -49,8 +50,10 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
             "Registration failed. Please check your details and try again."
         );
       }
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+    } catch (err: unknown) {
+      if (err instanceof Error)
+        setError(err.message || "An unexpected error occurred.");
+      else setError("An unexpected error occurred.");
     }
   }
 

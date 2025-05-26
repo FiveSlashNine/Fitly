@@ -18,7 +18,7 @@ export default function NavBar() {
 
   return (
     <div className="flex flex-col bg-white relative">
-      <header className="flex justify-between items-center px-8 py-5 shadow-md bg-gradient-to-b from-emerald-50 to-white z-600">
+      <header className="flex justify-between items-center px-8 py-5 shadow-md bg-gradient-to-b from-emerald-50 to-white z-55">
         <div className="flex items-center">
           <Image
             src="/Fitly_Check.svg"

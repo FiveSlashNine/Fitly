@@ -1,5 +1,5 @@
 import { GymStatistics } from "@/app/types/gym";
-import { Loader2, TrendingUp, Users, DollarSign, Euro } from "lucide-react";
+import { Loader2, TrendingUp, Users, Euro } from "lucide-react";
 
 interface StatisticsTabProps {
   statistics: GymStatistics | null;

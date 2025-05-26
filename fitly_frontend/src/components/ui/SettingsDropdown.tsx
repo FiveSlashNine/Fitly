@@ -19,27 +19,27 @@ export default function SettingsDropdown({
       icon: <Building2 className="w-4 h-4 mr-2" />,
       label: "Τα Στοιχεία μου",
       onClick: onViewDetails,
-      className: "text-gray-700"
+      className: "text-gray-700",
     },
     {
       icon: <Pencil className="w-4 h-4 mr-2" />,
       label: "Επεξεργασία Στοιχείων",
       onClick: onEditDetails,
-      className: "text-gray-700"
+      className: "text-gray-700",
     },
     {
       icon: <Trash2 className="w-4 h-4 mr-2" />,
       label: "Διαγραφή Λογαριασμού",
       onClick: onDeleteAccount,
-      className: "text-red-600"
-    }
+      className: "text-red-600",
+    },
   ];
 
   return (
     <div className="relative">
-      <Settings 
-        onClick={() => setIsOpen(!isOpen)} 
-        className="w-10 h-10 cursor-pointer text-gray-600" 
+      <Settings
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-10 h-10 cursor-pointer text-gray-600"
       />
 
       {isOpen && (
@@ -49,8 +49,8 @@ export default function SettingsDropdown({
               Ρυθμίσεις
             </div>
             <div className="border-t border-gray-100" />
-            
-            {dropdownItems.map((item, index) => (
+
+            {dropdownItems.map((item) => (
               <button
                 key={item.label}
                 onClick={() => {

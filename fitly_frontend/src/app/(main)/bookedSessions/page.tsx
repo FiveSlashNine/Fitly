@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { redirect, useSearchParams } from "next/navigation";
 import SessionCard from "@/components/SessionCard";
 import { Pagination } from "@/components/Pagination";
@@ -9,7 +9,7 @@ import { Session, sessionStatuses, sessionTypes } from "@/app/types/session";
 import { useAuthStore } from "@/app/lib/store";
 import { cancelBooking, fetchSessions } from "@/app/lib/sessionHandler";
 
-export default function AvailableSessionsPage() {
+function BookedSessionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -37,7 +37,7 @@ export default function AvailableSessionsPage() {
   useEffect(() => {
     if (!hasHydrated) return;
     const fetch = async () => {
-      const params: Record<string, any> = {
+      const params: Record<string, string | number | boolean> = {
         location: filters.location,
         type: filters.type,
         status: filters.status,
@@ -106,7 +106,7 @@ export default function AvailableSessionsPage() {
     }
 
     router.push(`?${params.toString()}`);
-  }, [filters]);
+  }, [filters, router, searchParams]);
 
   return (
     <div className="w-full py-8 px-20 bg-green-50">
@@ -132,7 +132,10 @@ export default function AvailableSessionsPage() {
                     userId !== -1
                       ? async () => {
                           await cancelBooking(userId, session.id);
-                          const params: Record<string, any> = {
+                          const params: Record<
+                            string,
+                            string | number | boolean
+                          > = {
                             location: filters.location,
                             type: filters.type,
                             status: filters.status,
@@ -169,5 +172,13 @@ export default function AvailableSessionsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BookedSessionsWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookedSessionsPage />
+    </Suspense>
   );
 }

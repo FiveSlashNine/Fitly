@@ -64,7 +64,6 @@ export default function Home() {
   };
 
   return (
-    
     <div className="min-h-screen flex flex-col bg-white">
       {/* MAIN CONTENT */}
       <main className="flex-grow pt-[120px] pb-16 px-8 bg-gradient-to-b from-white to-green-50">
@@ -154,7 +153,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 rounded-lg shadow-md overflow-hidden h-[400px] relative">
+          <div className="w-full md:w-1/2 rounded-lg shadow-md overflow-hidden h-[400px] relative z-20">
             {/* Περνάμε τα απαραίτητα props στο DynamicMap */}
             <DynamicMap cities={cities} onCitySelect={handleCitySelect} />
           </div>

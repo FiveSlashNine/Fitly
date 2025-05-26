@@ -127,7 +127,7 @@ export default function SessionDetails({
   return (
     <>
       <div
-        className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm"
+        className="fixed inset-0 flex items-center justify-center z-60 bg-black/30 backdrop-blur-sm"
         onClick={handleBackdropClick}
       >
         <div className="bg-white rounded-lg p-6 max-w-[425px] w-full mx-4 shadow-lg">

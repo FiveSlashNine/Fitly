@@ -78,7 +78,7 @@ export default function SignInForm({ onToggleForm }: SignInFormProps) {
       </Button>
       <div className="text-center text-sm">
         <p>
-          Don't have an account?{" "}
+          Don&apos;t have an account?
           <Button
             type="button"
             variant="link"

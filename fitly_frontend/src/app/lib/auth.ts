@@ -1,6 +1,7 @@
 "use client";
 import { useAuthStore } from "@/app/lib/store";
-import axios from "@/app/lib/axios";
+import axios, { isAxiosError } from "@/app/lib/axios";
+import { Session } from "@/app/types/session";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -32,9 +33,14 @@ export async function login(
     setNeedsGym(needsGym === "true");
     setIsGymOwner(isGymOwner === "true");
     return { success: true, accessToken };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Login error:", err);
-    const message = err.response?.data?.error || "Invalid email or password.";
+
+    let message = "Invalid email or password.";
+    if (isAxiosError(err) && err.response?.data?.error) {
+      message = err.response.data.error;
+    }
+
     return { success: false, error: message };
   }
 }
@@ -46,7 +52,7 @@ export interface RegisterParams {
   password: string;
   isGymOwner: boolean;
   roles: string;
-  sessions: any[];
+  sessions: Session[];
 }
 
 export interface RegisterResult {
@@ -61,13 +67,13 @@ export async function register(
   try {
     const response = await axios.post(`${API_BASE_URL}/api/v1/users`, params);
     return { success: true, userId: response.data.id };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Registration error:", err);
 
-    const message =
-      err.response?.data?.error ||
-      err.message ||
-      "An unexpected error occurred.";
+    let message = "An unexpected error occurred.";
+    if (isAxiosError(err)) {
+      message = err.response?.data?.error || err.message || message;
+    }
 
     return { success: false, error: message };
   }
@@ -101,12 +107,13 @@ export async function registerGym(
       success: true,
       gymId: response.data.id,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Gym Registration error:", err);
-    const message =
-      err.response?.data?.error ||
-      err.message ||
-      "An unexpected error occurred during gym registration.";
+
+    let message = "An unexpected error occurred during gym registration.";
+    if (isAxiosError(err)) {
+      message = err.response?.data?.error || err.message || message;
+    }
     return {
       success: false,
       error: message,

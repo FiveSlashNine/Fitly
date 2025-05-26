@@ -29,8 +29,10 @@ export default function SignUpGymForm() {
     let result: RegisterGymResult;
     try {
       result = await registerGym(gymName, gymLocation, userId);
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+    } catch (err: unknown) {
+      if (err instanceof Error)
+        setError(err.message || "An unexpected error occurred.");
+      else setError("An unexpected error occurred.");
       return;
     }
 

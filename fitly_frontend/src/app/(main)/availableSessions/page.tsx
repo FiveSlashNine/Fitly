@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Session, sessionStatuses, sessionTypes } from "@/app/types/session";
@@ -11,7 +11,7 @@ import { Pagination } from "@/components/Pagination";
 
 const itemsPerPage = 20;
 
-export default function AvailableSessionsPage() {
+function AvailableSessionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -30,7 +30,7 @@ export default function AvailableSessionsPage() {
   useEffect(() => {
     if (!hasHydrated) return;
     const fetch = async () => {
-      const params: Record<string, any> = {
+      const params: Record<string, string | number | null> = {
         location: filters.location,
         type: filters.type,
         status: "ACTIVE",
@@ -51,7 +51,7 @@ export default function AvailableSessionsPage() {
     };
 
     fetch();
-  }, [filters, currentPage, userId]);
+  }, [filters, currentPage, userId, hasHydrated]);
 
   useEffect(() => {
     const newFilters = {
@@ -92,7 +92,7 @@ export default function AvailableSessionsPage() {
     }
 
     router.push(`?${params.toString()}`);
-  }, [filters]);
+  }, [filters, router, searchParams]);
 
   return (
     <div className="w-full py-8 px-20 bg-green-50">
@@ -119,15 +119,16 @@ export default function AvailableSessionsPage() {
                     userId !== -1
                       ? async () => {
                           await bookSession(userId, session.id);
-                          const params: Record<string, any> = {
-                            location: filters.location,
-                            type: filters.type,
-                            status: "ACTIVE",
-                            searchQuery: filters.search,
-                            userId: userId === -1 ? null : userId,
-                            page: currentPage - 1,
-                            size: itemsPerPage,
-                          };
+                          const params: Record<string, string | number | null> =
+                            {
+                              location: filters.location,
+                              type: filters.type,
+                              status: "ACTIVE",
+                              searchQuery: filters.search,
+                              userId: userId === -1 ? null : userId,
+                              page: currentPage - 1,
+                              size: itemsPerPage,
+                            };
                           const updated = await fetchSessions(params);
                           setSessions(updated.content);
                           setTotalPages(updated.totalPages);
@@ -155,5 +156,13 @@ export default function AvailableSessionsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AvailableSessionsWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AvailableSessionsPage />
+    </Suspense>
   );
 }
