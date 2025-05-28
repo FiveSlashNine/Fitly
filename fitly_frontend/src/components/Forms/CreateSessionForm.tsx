@@ -141,7 +141,7 @@ export default function CreateSessionForm({
       className="fixed inset-0 flex items-center justify-center z-60 bg-black/30 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg p-6 max-w-[425px] w-full mx-4 shadow-lg">
+      <div className="bg-white rounded-lg p-4 max-w-[425px] w-full mx-4 shadow-lg max-h-[85vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">{t("createNewSession")}</h2>
           <button
