@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslations } from "next-intl";
 
 type TabType = "signin" | "signup";
 
@@ -33,14 +34,16 @@ export default function AuthCard({ initialTab = "signin" }: AuthCardProps) {
     handleTabChange(activeTab === "signin" ? "signup" : "signin");
   };
 
+  const t = useTranslations("AuthCard");
+
   return (
     <Card className="w-full max-w-md border-none bg-white/80 shadow-lg backdrop-blur-sm">
       <CardHeader className="space-y-2 text-center">
         <div className="flex justify-center">
           <Dumbbell className="h-10 w-10 text-green-600" />
         </div>
-        <CardTitle className="text-2xl font-bold">FitBook</CardTitle>
-        <CardDescription>Book your gym sessions with ease</CardDescription>
+        <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs
@@ -50,8 +53,8 @@ export default function AuthCard({ initialTab = "signin" }: AuthCardProps) {
           }}
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="signin">{t("signin")}</TabsTrigger>
+            <TabsTrigger value="signup">{t("signup")}</TabsTrigger>
           </TabsList>
           <TabsContent value="signin" className="mt-4">
             <SignInForm onToggleForm={toggleForm} />

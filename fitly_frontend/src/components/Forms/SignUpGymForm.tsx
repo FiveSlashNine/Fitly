@@ -5,14 +5,17 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerGym, RegisterGymResult } from "@/app/lib/auth";
-import { useAuthStore } from "@/app/lib/store";
+import { registerGym, RegisterGymResult } from "@/app/[locale]/lib/auth";
+import { useAuthStore } from "@/app/[locale]/lib/store";
+import { useTranslations } from "next-intl";
 
 export default function SignUpGymForm() {
   const router = useRouter();
   const { userId, setNeedsGym } = useAuthStore();
 
   const [error, setError] = useState<string | null>(null);
+
+  const t = useTranslations("SignUpGymForm");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,9 +33,8 @@ export default function SignUpGymForm() {
     try {
       result = await registerGym(gymName, gymLocation, userId);
     } catch (err: unknown) {
-      if (err instanceof Error)
-        setError(err.message || "An unexpected error occurred.");
-      else setError("An unexpected error occurred.");
+      if (err instanceof Error) setError(err.message || t("unexpectedError"));
+      else setError(t("unexpectedError"));
       return;
     }
 
@@ -40,10 +42,7 @@ export default function SignUpGymForm() {
       router.push("/");
       setNeedsGym(false);
     } else {
-      setError(
-        result.error ??
-          "Registration failed. Please check your details and try again."
-      );
+      setError(result.error ?? t("registrationFailed"));
     }
   }
 
@@ -51,19 +50,19 @@ export default function SignUpGymForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && <div className="text-red-600 text-sm">{error}</div>}
       <div className="space-y-2">
-        <Label htmlFor="GymName">Gym Name</Label>
+        <Label htmlFor="GymName">{t("gymNameLabel")}</Label>
         <Input
           id="GymName"
           name="gymName"
           type="text"
           pattern="[a-zA-Z0-9._]{1,20}"
-          title="Gym name must have at least 1 character and contain only letters, numbers, underscores or hyphens."
-          placeholder="Your Gym's Name"
+          title={t("gymNamePatternTitle")}
+          placeholder={t("gymNamePlaceholder")}
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="GymLocation">Gym Location</Label>
+        <Label htmlFor="GymLocation">{t("gymLocationLabel")}</Label>
         <Input
           id="GymLocation"
           name="gymLocation"
@@ -73,7 +72,7 @@ export default function SignUpGymForm() {
         />
       </div>
       <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-        Register Gym
+        {t("registerGymButton")}
       </Button>
     </form>
   );

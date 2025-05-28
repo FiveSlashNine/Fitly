@@ -1,5 +1,6 @@
-import { GymStatistics } from "@/app/types/gym";
+import { GymStatistics } from "@/app/[locale]/types/gym";
 import { Loader2, TrendingUp, Users, Euro } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface StatisticsTabProps {
   statistics: GymStatistics | null;
@@ -10,11 +11,13 @@ export default function StatisticsTab({
   statistics,
   isLoading,
 }: StatisticsTabProps) {
+  const t = useTranslations("StatisticsTab");
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <p className="mt-2 text-gray-600">Loading statistics...</p>
+        <p className="mt-2 text-gray-600">{t("loading")}</p>
       </div>
     );
   }
@@ -23,7 +26,7 @@ export default function StatisticsTab({
     return (
       <div className="flex flex-col items-center justify-center h-[400px]">
         <TrendingUp className="h-12 w-12 text-gray-400" />
-        <p className="mt-2 text-gray-600">No statistics available</p>
+        <p className="mt-2 text-gray-600">{t("noStatistics")}</p>
       </div>
     );
   }
@@ -36,7 +39,7 @@ export default function StatisticsTab({
             <TrendingUp className="h-6 w-6 text-emerald-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">Total Sessions</p>
+            <p className="text-sm text-gray-600">{t("totalSessions")}</p>
             <p className="text-2xl font-semibold">{statistics.totalSessions}</p>
           </div>
         </div>
@@ -48,7 +51,7 @@ export default function StatisticsTab({
             <Users className="h-6 w-6 text-blue-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">Total Participants</p>
+            <p className="text-sm text-gray-600">{t("totalParticipants")}</p>
             <p className="text-2xl font-semibold">
               {statistics.totalParticipants}
             </p>
@@ -62,7 +65,7 @@ export default function StatisticsTab({
             <Euro className="h-6 w-6 text-purple-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">Total Revenue</p>
+            <p className="text-sm text-gray-600">{t("totalRevenue")}</p>
             <p className="text-2xl font-semibold">${statistics.totalRevenue}</p>
           </div>
         </div>

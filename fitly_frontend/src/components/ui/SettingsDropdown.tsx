@@ -1,4 +1,5 @@
 import { Building2, Pencil, Trash2, Settings } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface SettingsDropdownProps {
@@ -13,23 +14,23 @@ export default function SettingsDropdown({
   onDeleteAccount,
 }: SettingsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const t = useTranslations("SettingsDropdown");
   const dropdownItems = [
     {
       icon: <Building2 className="w-4 h-4 mr-2" />,
-      label: "Τα Στοιχεία μου",
+      label: t("view"),
       onClick: onViewDetails,
       className: "text-gray-700",
     },
     {
       icon: <Pencil className="w-4 h-4 mr-2" />,
-      label: "Επεξεργασία Στοιχείων",
+      label: t("edit"),
       onClick: onEditDetails,
       className: "text-gray-700",
     },
     {
       icon: <Trash2 className="w-4 h-4 mr-2" />,
-      label: "Διαγραφή Λογαριασμού",
+      label: t("delete"),
       onClick: onDeleteAccount,
       className: "text-red-600",
     },
@@ -46,7 +47,7 @@ export default function SettingsDropdown({
         <div className="absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
           <div className="py-1">
             <div className="px-4 py-2 text-sm font-semibold text-gray-700">
-              Ρυθμίσεις
+              {t("settings")}
             </div>
             <div className="border-t border-gray-100" />
 

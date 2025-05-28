@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { useAuthStore } from "@/app/lib/store";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { useAuthStore } from "@/app/[locale]/lib/store";
 import { CircleUser } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function NavBar() {
   const { accessToken, needsGym, setAuthTokens, logout, isGymOwner } =
@@ -11,10 +12,20 @@ export default function NavBar() {
 
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const t = useTranslations("NavBar");
 
   useEffect(() => {
     setLoading(false);
   }, [setAuthTokens]);
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const currentLocale = useLocale();
+  const targetLocale = currentLocale === "el" ? "en" : "el";
+
+  const switchLocale = () => {
+    router.push(pathname, { locale: targetLocale });
+  };
 
   return (
     <div className="flex flex-col bg-white relative">
@@ -32,17 +43,23 @@ export default function NavBar() {
           </Link>
         </div>
         <nav className="flex items-center gap-6 relative">
+          <button
+            onClick={switchLocale}
+            className="text-sm text-gray-600 hover:text-emerald-700 transition-colors"
+          >
+            {targetLocale.toUpperCase()}
+          </button>
           <Link
             href="/contactPage"
             className="hidden md:inline text-sm text-gray-600 hover:text-emerald-700 transition-colors"
           >
-            Επικοινωνία
+            {t("contact")}
           </Link>
           <Link
             href="/availableSessions"
             className="hidden md:inline text-sm text-gray-600 hover:text-emerald-700 transition-colors"
           >
-            Διαθέσιμα Προγράμματα
+            {t("sessions")}
           </Link>
 
           {!loading && (
@@ -63,14 +80,14 @@ export default function NavBar() {
                       className="block md:hidden text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                       onClick={() => setMenuOpen(false)}
                     >
-                      Επικοινωνία
+                      {t("contact")}
                     </Link>
                     <Link
                       href="/availableSessions"
                       className="block md:hidden text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                       onClick={() => setMenuOpen(false)}
                     >
-                      Διαθέσιμα Προγράμματα
+                      {t("sessions")}
                     </Link>
 
                     {accessToken ? (
@@ -81,7 +98,7 @@ export default function NavBar() {
                             className="text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                             onClick={() => setMenuOpen(false)}
                           >
-                            Εγγραφή Γυμναστηρίου
+                            {t("registerGym")}
                           </Link>
                         )}
                         <Link
@@ -89,14 +106,14 @@ export default function NavBar() {
                           className="text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                           onClick={() => setMenuOpen(false)}
                         >
-                          Booked Προγράμματα
+                          {t("booked")}
                         </Link>
                         <Link
                           href="/userProfile"
                           className="text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                           onClick={() => setMenuOpen(false)}
                         >
-                          Το profile μου
+                          {t("profile")}
                         </Link>
                         {isGymOwner && !needsGym && (
                           <Link
@@ -104,7 +121,7 @@ export default function NavBar() {
                             className="text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                             onClick={() => setMenuOpen(false)}
                           >
-                            Dashboard
+                            {t("dashboard")}
                           </Link>
                         )}
                         <button
@@ -114,7 +131,7 @@ export default function NavBar() {
                           }}
                           className="text-sm text-left text-red-600 hover:bg-gray-100 px-4 py-2 rounded"
                         >
-                          Αποσύνδεση
+                          {t("logout")}
                         </button>
                       </>
                     ) : (
@@ -124,14 +141,14 @@ export default function NavBar() {
                           className="text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                           onClick={() => setMenuOpen(false)}
                         >
-                          Σύνδεση
+                          {t("signin")}
                         </Link>
                         <Link
                           href="/auth/signup"
                           className="text-sm text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
                           onClick={() => setMenuOpen(false)}
                         >
-                          Εγγραφή
+                          {t("signup")}
                         </Link>
                       </>
                     )}

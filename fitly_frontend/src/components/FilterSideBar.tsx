@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Dispatch, SetStateAction } from "react";
+import { useTranslations } from "next-intl";
 
 interface FilterSidebarProps {
   filters: {
@@ -60,6 +61,8 @@ export function FilterSidebar({
     setCurrentPage(1);
   };
 
+  const t = useTranslations("FilterSidebar");
+
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
@@ -68,31 +71,31 @@ export function FilterSidebar({
     <div className="w-full md:w-64 shrink-0">
       <Card>
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle>{t("filters")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="search">Search</Label>
+            <Label htmlFor="search">{t("search")}</Label>
             <Input
               id="search"
-              placeholder="Search sessions..."
+              placeholder={t("searchPlaceholder")}
               value={filters.search}
               onChange={(e) => handleFilterChange("search", e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="location">{t("location")}</Label>
             <Input
               id="location"
-              placeholder="Enter location..."
+              placeholder={t("locationPlaceholder")}
               value={filters.location}
               onChange={(e) => handleFilterChange("location", e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="type">Session Type</Label>
+            <Label htmlFor="type">{t("type")}</Label>
             <Select
               value={filters.type || "all"}
               onValueChange={(value) => {
@@ -100,10 +103,10 @@ export function FilterSidebar({
               }}
             >
               <SelectTrigger id="type">
-                <SelectValue placeholder="All Types" />
+                <SelectValue placeholder={t("allTypes")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">{t("allTypes")}</SelectItem>
                 {sessionTypes.map((type) => (
                   <SelectItem key={type} value={type}>
                     {capitalizeFirstLetter(type)}
@@ -115,7 +118,7 @@ export function FilterSidebar({
 
           {showStatusFilter && (
             <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">{t("status")}</Label>
               <Select
                 value={filters.status || "all"}
                 onValueChange={(value) => {
@@ -123,10 +126,10 @@ export function FilterSidebar({
                 }}
               >
                 <SelectTrigger id="status">
-                  <SelectValue placeholder="All Statuses" />
+                  <SelectValue placeholder={t("allStatuses")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="all">{t("allStatuses")}</SelectItem>
                   {sessionStatuses.map((status) => (
                     <SelectItem key={status} value={status}>
                       {capitalizeFirstLetter(status)}
@@ -138,7 +141,7 @@ export function FilterSidebar({
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="sort">Sort By</Label>
+            <Label htmlFor="sort">{t("sortBy")}</Label>
             <Select
               value={filters.sort || "default"}
               onValueChange={(value) => {
@@ -146,18 +149,18 @@ export function FilterSidebar({
               }}
             >
               <SelectTrigger id="sort">
-                <SelectValue placeholder="Sort By" />
+                <SelectValue placeholder={t("sortBy")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="default">Default</SelectItem>
-                <SelectItem value="startTime,asc">Start Time (Asc)</SelectItem>
-                <SelectItem value="startTime,desc">
-                  Start Time (Desc)
+                <SelectItem value="default">{t("default")}</SelectItem>
+                <SelectItem value="startTime,asc">{t("startAsc")}</SelectItem>
+                <SelectItem value="startTime,desc">{t("startDesc")}</SelectItem>
+                <SelectItem value="endTime,asc">{t("endAsc")}</SelectItem>
+                <SelectItem value="endTime,desc">{t("endDesc")}</SelectItem>
+                <SelectItem value="capacity,asc">{t("capacityAsc")}</SelectItem>
+                <SelectItem value="capacity,desc">
+                  {t("capacityDesc")}
                 </SelectItem>
-                <SelectItem value="endTime,asc">End Time (Asc)</SelectItem>
-                <SelectItem value="endTime,desc">End Time (Desc)</SelectItem>
-                <SelectItem value="capacity,asc">Capacity (Asc)</SelectItem>
-                <SelectItem value="capacity,desc">Capacity (Desc)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -167,7 +170,7 @@ export function FilterSidebar({
             className="w-full mt-4"
             onClick={handleReset}
           >
-            Reset Filters
+            {t("reset")}
           </Button>
         </CardContent>
       </Card>

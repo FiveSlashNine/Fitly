@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Session } from "@/app/types/session";
+import { Session } from "@/app/[locale]/types/session";
 import { Button } from "./ui/button";
-import { getStatusColor } from "@/app/lib/sessionHandler";
+import { getStatusColor } from "@/app/[locale]/lib/sessionHandler";
+import { useTranslations } from "next-intl";
 
 interface SessionCardProps {
   session: Session;
@@ -32,6 +33,8 @@ export default function SessionCard({
   const handleClick = () => {
     if (action) action();
   };
+
+  const t = useTranslations("SessionCard");
 
   return (
     <Card className="h-full flex flex-col overflow-hidden p-0">
@@ -52,7 +55,7 @@ export default function SessionCard({
           </Badge>
         </div>
         <div className="text-sm text-muted-foreground">
-          Type: {session.type}
+          {t("type", { type: session.type })}
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
@@ -78,12 +81,14 @@ export default function SessionCard({
           </div>
           <div className="flex items-center text-sm">
             <UsersIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>Capacity: {session.capacity}</span>
+            <span>{t("capacity", { count: session.capacity })}</span>
           </div>
         </div>
       </CardContent>
       <CardFooter className="border-t pt-4 pb-4 flex justify-between items-center">
-        <div className="text-lg font-semibold">{session.cost}</div>
+        <div className="text-lg font-semibold">
+          {t("cost", { cost: session.cost })}
+        </div>
         {buttonLabel && <Button onClick={handleClick}>{buttonLabel}</Button>}
       </CardFooter>
     </Card>

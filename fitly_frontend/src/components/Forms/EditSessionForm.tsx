@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { updateSession } from "@/app/lib/sessionHandler";
-import { useAuthStore } from "@/app/lib/store";
+import { updateSession } from "@/app/[locale]/lib/sessionHandler";
+import { useAuthStore } from "@/app/[locale]/lib/store";
 import { XIcon } from "lucide-react";
-import { Session, sessionTypes } from "@/app/types/session";
+import { Session, sessionTypes } from "@/app/[locale]/types/session";
+import { useTranslations } from "next-intl";
 
 interface EditSessionFormProps {
   session: Session;
@@ -31,23 +32,24 @@ export default function EditSessionForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations("EditSessionForm");
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = "Title is required";
-    if (!formData.capacity) newErrors.capacity = "Capacity is required";
-    if (!formData.date) newErrors.date = "Date is required";
-    if (!formData.startTime) newErrors.startTime = "Start time is required";
-    if (!formData.endTime) newErrors.endTime = "End time is required";
-    if (formData.type == "") newErrors.type = "Type is required";
+    if (!formData.title.trim()) newErrors.title = t("titleError");
+    if (!formData.capacity) newErrors.capacity = t("capacityError");
+    if (!formData.date) newErrors.date = t("dateError");
+    if (!formData.startTime) newErrors.startTime = t("startTimeError");
+    if (!formData.endTime) newErrors.endTime = t("endTimeError");
+    if (formData.type == "") newErrors.type = t("typeError");
 
     if (formData.startTime && formData.endTime) {
       const start = new Date(`1970-01-01T${formData.startTime}:00`);
       const end = new Date(`1970-01-01T${formData.endTime}:00`);
 
       if (end <= start) {
-        newErrors.endTime = "End time must be after start time";
+        newErrors.endTime = t("endTimeAfterStartError");
       }
     }
 
@@ -80,7 +82,7 @@ export default function EditSessionForm({
     }
 
     if (!accessToken) {
-      setError("You must be logged in to update a session");
+      setError(t("notLoggedInError"));
       return;
     }
 
@@ -103,7 +105,7 @@ export default function EditSessionForm({
         onSessionUpdated();
       }
     } catch (err) {
-      setError("Failed to update session. Please try again.");
+      setError(t("updateFailedError"));
       console.error("Error updating session:", err);
     } finally {
       setIsSubmitting(false);
@@ -125,7 +127,7 @@ export default function EditSessionForm({
     >
       <div className="bg-white rounded-lg p-6 max-w-[425px] w-full mx-4 shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Edit Session</h2>
+          <h2 className="text-xl font-semibold">{t("editSessionHeading")}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
@@ -136,7 +138,9 @@ export default function EditSessionForm({
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Title</span>
+            <span className="text-emerald-800 font-medium">
+              {t("titleLabel")}
+            </span>
             <input
               type="text"
               name="title"
@@ -145,7 +149,7 @@ export default function EditSessionForm({
               className={`border ${
                 errors.title ? "border-red-500" : "border-emerald-200"
               } rounded-lg px-3 py-2 focus:outline-emerald-400`}
-              placeholder="Title"
+              placeholder={t("titleLabel")}
             />
             {errors.title && (
               <span className="text-red-500 text-sm">{errors.title}</span>
@@ -153,26 +157,30 @@ export default function EditSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Description</span>
+            <span className="text-emerald-800 font-medium">
+              {t("descriptionLabel")}
+            </span>
             <input
               type="text"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
               className="border border-emerald-200 rounded-lg px-3 py-2 focus:outline-emerald-400"
-              placeholder="Description"
+              placeholder={t("descriptionLabel")}
             />
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Type</span>
+            <span className="text-emerald-800 font-medium">
+              {t("typeLabel")}
+            </span>
             <select
               name="type"
               value={formData.type}
               onChange={handleInputChange}
               className="border border-emerald-200 rounded-lg px-3 py-2 focus:outline-emerald-400"
             >
-              <option value="">Select Type</option>
+              <option value="">{t("typePlaceholder")}</option>
               {sessionTypes.map((type, index) => (
                 <option key={index} value={type}>
                   {type}
@@ -185,7 +193,9 @@ export default function EditSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Capacity</span>
+            <span className="text-emerald-800 font-medium">
+              {t("capacityLabel")}
+            </span>
             <input
               type="number"
               name="capacity"
@@ -195,7 +205,7 @@ export default function EditSessionForm({
               className={`border ${
                 errors.capacity ? "border-red-500" : "border-emerald-200"
               } rounded-lg px-3 py-2 focus:outline-emerald-400`}
-              placeholder="Capacity"
+              placeholder={t("capacityLabel")}
             />
             {errors.capacity && (
               <span className="text-red-500 text-sm">{errors.capacity}</span>
@@ -203,20 +213,22 @@ export default function EditSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Image Url</span>
+            <span className="text-emerald-800 font-medium">
+              {t("imageUrlLabel")}
+            </span>
             <input
               name="imageUrl"
               value={formData.imageUrl}
               onChange={handleInputChange}
               className="border border-emerald-200 rounded-lg px-3 py-2 focus:outline-emerald-400"
-              placeholder="Image URL"
+              placeholder={t("imageUrlLabel")}
             />
           </label>
 
           <div className="space-y-3">
             <div className="w-full">
               <span className="text-emerald-800 font-medium text-sm block mb-1">
-                Date
+                {t("dateLabel")}
               </span>
               <input
                 type="date"
@@ -234,7 +246,9 @@ export default function EditSessionForm({
 
             <div>
               <label className="flex flex-col gap-1">
-                <span className="text-emerald-800 font-medium">Start Time</span>
+                <span className="text-emerald-800 font-medium">
+                  {t("startTimeLabel")}
+                </span>
                 <input
                   type="time"
                   name="startTime"
@@ -254,7 +268,9 @@ export default function EditSessionForm({
 
             <div>
               <label className="flex flex-col gap-1">
-                <span className="text-emerald-800 font-medium">End Time</span>
+                <span className="text-emerald-800 font-medium">
+                  {t("endTimeLabel")}
+                </span>
                 <input
                   type="time"
                   name="endTime"
@@ -276,7 +292,7 @@ export default function EditSessionForm({
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Updating..." : "Update Session"}
+            {isSubmitting ? t("submitButtonLoading") : t("submitButton")}
           </Button>
           {error && <span className="text-red-500 text-sm mt-2">{error}</span>}
         </form>

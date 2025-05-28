@@ -1,26 +1,24 @@
 // src/components/ClientMap.tsx
-"use client"; 
+"use client";
 
-import React, { useEffect, useState } from 'react'; // Import useState
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-
+import React, { useEffect, useState } from "react"; // Import useState
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import { useTranslations } from "next-intl";
 
 const DefaultIcon = L.icon({
-  iconUrl: '/marker-icon.png', 
+  iconUrl: "/marker-icon.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowUrl: '/marker-shadow.png',
-  shadowSize: [41, 41]
+  shadowUrl: "/marker-shadow.png",
+  shadowSize: [41, 41],
 });
 
-
-if (typeof window !== 'undefined') { 
+if (typeof window !== "undefined") {
   L.Marker.prototype.options.icon = DefaultIcon;
 }
-
 
 //ΤΥΠΟΣ ΓΙΑ ΤΙΣ ΠΟΛΕΙΣ
 interface City {
@@ -28,34 +26,32 @@ interface City {
   position: [number, number];
 }
 
-
 interface ClientMapProps {
   cities: City[];
   onCitySelect: (cityName: string) => void;
 }
 
 const ClientMap: React.FC<ClientMapProps> = ({ cities, onCitySelect }) => {
+  const t = useTranslations("ClientMap");
   const [isMounted, setIsMounted] = useState(false);
 
- 
   useEffect(() => {
     setIsMounted(true);
-    
-  }, []); 
+  }, []);
 
   //ΣΥΝΤΕΤΑΓΜΕΝΕΣ ΓΙΑ ΚΕΝΤΡΑΡΙΣΜΑ ΣΤΗΝ ΕΛΛΑΔΑ
   const defaultCenter: [number, number] = [39.0742, 23.6833];
   const defaultZoom = 6;
 
   if (!isMounted) {
-    return null; 
+    return null;
   }
 
   return (
     <MapContainer
       center={defaultCenter}
       zoom={defaultZoom}
-      style={{ height: '100%', width: '100%' }}
+      style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -76,7 +72,7 @@ const ClientMap: React.FC<ClientMapProps> = ({ cities, onCitySelect }) => {
               className="mt-2 text-sm text-emerald-700 hover:text-emerald-800"
               onClick={() => onCitySelect(city.name)}
             >
-              Επιλογή
+              {t("select")}
             </button>
           </Popup>
         </Marker>

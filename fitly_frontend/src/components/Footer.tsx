@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCopyright,
@@ -8,8 +8,10 @@ import {
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
   return (
     <>
       {/* FOOTER */}
@@ -21,7 +23,7 @@ export default function Footer() {
             <div>
               <h3 className="font-medium text-lg mb-4 text-emerald-800">
                 <FontAwesomeIcon icon={faPersonRunning} className="w-8 h-8" />
-                Αθλούμενος
+                {t("athlete")}
               </h3>
               <ul className="space-y-3">
                 <li>
@@ -29,7 +31,7 @@ export default function Footer() {
                     href="/infoPage"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Πως Λειτουργεί
+                    {t("howItWorks")}
                   </Link>
                 </li>
                 <li>
@@ -37,7 +39,7 @@ export default function Footer() {
                     href="/auth/signin"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Σύνδεση Αθλούμενου
+                    {t("signinAthlete")}
                   </Link>
                 </li>
                 <li>
@@ -45,7 +47,7 @@ export default function Footer() {
                     href="/auth/signup"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Εγγραφή Αθλούμενου
+                    {t("signupAthlete")}
                   </Link>
                 </li>
               </ul>
@@ -54,9 +56,8 @@ export default function Footer() {
             {/* ΓΥΜΝΑΣΤΗΡΙΟ*/}
             <div>
               <h3 className="font-medium text-lg mb-4 text-emerald-800">
-                {" "}
                 <FontAwesomeIcon icon={faDumbbell} className="w-8 h-8" />{" "}
-                Γυμναστήριο
+                {t("gym")}
               </h3>
               <ul className="space-y-3">
                 <li>
@@ -64,7 +65,7 @@ export default function Footer() {
                     href="/infoPage"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Πως Λειτουργεί
+                    {t("howItWorks")}
                   </Link>
                 </li>
                 <li>
@@ -72,7 +73,7 @@ export default function Footer() {
                     href="/auth/signin"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Σύνδεση Γυμναστηρίου
+                    {t("signinGym")}
                   </Link>
                 </li>
                 <li>
@@ -80,7 +81,7 @@ export default function Footer() {
                     href="/auth/signup"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Εγγραφή Γυμναστηρίου
+                    {t("signupGym")}
                   </Link>
                 </li>
               </ul>
@@ -89,8 +90,8 @@ export default function Footer() {
             {/* ΣΧΕΤΙΚΑ ΜΕ ΕΜΑΣ */}
             <div>
               <h3 className="font-medium text-lg mb-4 text-emerald-800">
-                <FontAwesomeIcon icon={faInfo} className="w-8 h-8" /> Σχετικά με
-                εμάς
+                <FontAwesomeIcon icon={faInfo} className="w-8 h-8" />{" "}
+                {t("aboutUs")}
               </h3>
               <ul className="space-y-3">
                 <li>
@@ -98,7 +99,7 @@ export default function Footer() {
                     href="/aboutPage"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Τι προσφέρουμε
+                    {t("whatWeOffer")}
                   </Link>
                 </li>
                 <li>
@@ -106,7 +107,7 @@ export default function Footer() {
                     href="/infoPage"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Πως Λειτουργεί
+                    {t("howItWorks")}
                   </Link>
                 </li>
                 <li>
@@ -114,7 +115,7 @@ export default function Footer() {
                     href="/contactPage"
                     className="text-gray-600 hover:text-emerald-700 transition-colors"
                   >
-                    Επικοινωνία
+                    {t("contact")}
                   </Link>
                 </li>
               </ul>
@@ -124,7 +125,7 @@ export default function Footer() {
             <div>
               <h3 className="font-medium text-lg mb-4 text-emerald-800">
                 <FontAwesomeIcon icon={faShareNodes} className="w-8 h-8" />
-                Follow us
+                {t("followUs")}
               </h3>
               <div className="flex gap-6">
                 <Link
@@ -157,7 +158,7 @@ export default function Footer() {
           <div className="mt-8 pt-6 border-t border-gray-100 text-sm text-gray-500">
             <p className="text-emerald-800 text-center">
               <FontAwesomeIcon icon={faCopyright} className="w-8 h-8" />
-              2025 FITLY. All rights reserved.
+              {t("copyright")}
             </p>
           </div>
         </div>

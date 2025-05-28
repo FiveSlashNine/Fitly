@@ -1,4 +1,4 @@
-import { getStatusColor } from "@/app/lib/sessionHandler";
+import { getStatusColor } from "@/app/[locale]/lib/sessionHandler";
 import { useState } from "react";
 import {
   Card,
@@ -11,7 +11,8 @@ import SessionDetails from "@/components/SessionDetails";
 import { CalendarIcon, ClockIcon, UsersIcon, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { Session } from "@/app/types/session";
+import { Session } from "@/app/[locale]/types/session";
+import { useTranslations } from "next-intl";
 
 interface MySessionsProps {
   sessions: Session[];
@@ -25,6 +26,7 @@ interface SessionCardProps {
 }
 
 function SessionCard({ session, onClick }: SessionCardProps) {
+  const t = useTranslations("MySessions");
   return (
     <Card
       onClick={onClick}
@@ -47,7 +49,7 @@ function SessionCard({ session, onClick }: SessionCardProps) {
           </Badge>
         </div>
         <div className="text-sm text-muted-foreground">
-          Type: {session.type}
+          {t("type")}: {session.type}
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
@@ -65,7 +67,9 @@ function SessionCard({ session, onClick }: SessionCardProps) {
           </div>
           <div className="flex items-center text-sm">
             <UsersIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>Capacity: {session.capacity}</span>
+            <span>
+              {t("capacity")}: {session.capacity}
+            </span>
           </div>
         </div>
       </CardContent>
@@ -82,7 +86,7 @@ export default function MySessions({
   onRefresh,
 }: MySessionsProps) {
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-
+  const t = useTranslations("MySessions");
   const handleSessionDeleted = () => {
     setSelectedSession(null);
     if (onRefresh) {
@@ -94,7 +98,7 @@ export default function MySessions({
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <p className="mt-4 text-sm text-gray-500">Loading sessions...</p>
+        <p className="mt-4 text-sm text-gray-500">{t("loading")}</p>
       </div>
     );
   }
@@ -118,10 +122,10 @@ export default function MySessions({
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          No Sessions Found
+          {t("noSessionsTitle")}
         </h3>
         <p className="text-sm text-gray-500 text-center max-w-sm">
-          Check back later or create a new session.
+          {t("noSessionsText")}
         </p>
       </div>
     );

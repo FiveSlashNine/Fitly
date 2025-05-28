@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { register } from "@/app/lib/auth";
-import { useAuthStore } from "@/app/lib/store";
-import { Session } from "@/app/types/session";
+import { register } from "@/app/[locale]/lib/auth";
+import { useAuthStore } from "@/app/[locale]/lib/store";
+import { Session } from "@/app/[locale]/types/session";
+import { useTranslations } from "next-intl";
 
 interface SignUpFormProps {
   onToggleForm: () => void;
@@ -18,6 +19,7 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { setNeedsGym } = useAuthStore();
+  const t = useTranslations("SignUpForm");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -45,15 +47,11 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
         setNeedsGym(newUser.isGymOwner);
         onToggleForm();
       } else {
-        setError(
-          result.error ??
-            "Registration failed. Please check your details and try again."
-        );
+        setError(result.error ?? t("registrationFailed"));
       }
     } catch (err: unknown) {
-      if (err instanceof Error)
-        setError(err.message || "An unexpected error occurred.");
-      else setError("An unexpected error occurred.");
+      if (err instanceof Error) setError(err.message || t("unexpectedError"));
+      else setError(t("unexpectedError"));
     }
   }
 
@@ -61,18 +59,18 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && <div className="text-red-600 text-sm">{error}</div>}
       <div className="space-y-2">
-        <Label htmlFor="username">Username</Label>
+        <Label htmlFor="username">{t("usernameLabel")}</Label>
         <Input
           id="username"
           name="username"
           placeholder="JohnDoe"
           pattern="[a-zA-Z0-9._]{1,20}"
           required
-          title="Username must have at least 1 character and contain only letters, numbers, underscores or hyphens."
+          title={t("usernamePatternTitle")}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber">Phone Number</Label>
+        <Label htmlFor="phoneNumber">{t("phoneNumberLabel")}</Label>
         <Input
           id="phoneNumber"
           name="phoneNumber"
@@ -83,7 +81,7 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("emailLabel")}</Label>
         <Input
           id="email"
           name="email"
@@ -93,7 +91,7 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("passwordLabel")}</Label>
         <div className="relative">
           <Input
             id="password"
@@ -115,7 +113,7 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
               <Eye className="h-4 w-4 text-gray-500" />
             )}
             <span className="sr-only">
-              {showPassword ? "Hide password" : "Show password"}
+              {showPassword ? t("hidePassword") : t("showPassword")}
             </span>
           </Button>
         </div>
@@ -126,21 +124,21 @@ export default function SignUpForm({ onToggleForm }: SignUpFormProps) {
           htmlFor="ownsGym"
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
-          Owns a gym
+          {t("ownsGymLabel")}
         </Label>
       </div>
       <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-        Create Account
+        {t("createAccountButton")}
       </Button>
       <div className="text-center text-sm">
         <p>
-          Already have an account?{" "}
+          {t("alreadyHaveAccount")}
           <Button
             variant="link"
             className="h-auto p-0 text-green-600"
             onClick={onToggleForm}
           >
-            Sign in
+            {t("signInButton")}
           </Button>
         </p>
       </div>

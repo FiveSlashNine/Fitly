@@ -1,12 +1,16 @@
 "use client";
 
-import { getUserDetails, UpdateUserDetails } from "@/app/lib/sessionHandler";
-import { useAuthStore } from "@/app/lib/store";
-import { User } from "@/app/types/user";
+import {
+  getUserDetails,
+  UpdateUserDetails,
+} from "@/app/[locale]/lib/sessionHandler";
+import { useAuthStore } from "@/app/[locale]/lib/store";
+import { User } from "@/app/[locale]/types/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -16,6 +20,7 @@ export default function EditUserDetailsForms() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("EditUserDetailsForm");
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -55,23 +60,22 @@ export default function EditUserDetailsForms() {
       const res = await UpdateUserDetails(updatedUser);
       setUser(res);
     } catch (err: unknown) {
-      if (err instanceof Error)
-        setError(err.message || "An unexpected error occurred.");
-      setError("An unexpected error occurred.");
+      if (err instanceof Error) setError(err.message || t("errorDefault"));
+      setError(t("errorDefault"));
     } finally {
       setLoading(false);
     }
   }
 
   if (loading || !user) {
-    return <div className="text-center py-10">Loading...</div>;
+    return <div className="text-center py-10">{t("loadingText")}</div>;
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
       {error && <div className="text-red-600 text-sm">{error}</div>}
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("emailLabel")}</Label>
         <Input
           id="email"
           name="email"
@@ -81,32 +85,30 @@ export default function EditUserDetailsForms() {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="username">Username</Label>
+        <Label htmlFor="username">{t("usernameLabel")}</Label>
         <Input
           id="username"
           name="username"
           defaultValue={user.username}
           pattern="[a-zA-Z0-9._]{1,20}"
-          title="Username must have at least 1 character and contain only letters, numbers, underscores or hyphens."
+          title={t("usernamePatternTitle")}
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber">Phone Number</Label>
+        <Label htmlFor="phoneNumber">{t("phoneNumberLabel")}</Label>
         <Input
           id="phoneNumber"
           name="phoneNumber"
           type="tel"
           pattern="[0-9]{0,14}$"
           defaultValue={user.phoneNumber}
-          title="Phone Numbers Can Contain Up to 14 Digits (Not Characters)"
+          title={t("phoneNumberPatternTitle")}
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">
-          New Password (leave blank to keep current)
-        </Label>
+        <Label htmlFor="password">{t("passwordLabel")}</Label>
         <div className="relative">
           <Input
             id="password"
@@ -128,7 +130,7 @@ export default function EditUserDetailsForms() {
               <Eye className="h-4 w-4 text-gray-500" />
             )}
             <span className="sr-only">
-              {showPassword ? "Hide password" : "Show password"}
+              {showPassword ? t("hidePassword") : t("showPassword")}
             </span>
           </Button>
         </div>
@@ -139,7 +141,7 @@ export default function EditUserDetailsForms() {
           className="bg-green-600 hover:bg-green-700 px-10"
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save Changes"}
+          {loading ? t("submitButtonLoading") : t("submitButton")}
         </Button>
       </div>
     </form>

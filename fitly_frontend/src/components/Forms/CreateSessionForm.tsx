@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { createSession, getGymIdByUserId } from "@/app/lib/sessionHandler";
-import { useAuthStore } from "@/app/lib/store";
+import {
+  createSession,
+  getGymIdByUserId,
+} from "@/app/[locale]/lib/sessionHandler";
+import { useAuthStore } from "@/app/[locale]/lib/store";
 import axios from "axios";
 import { XIcon } from "lucide-react";
-import { Session, sessionTypes } from "@/app/types/session";
+import { Session, sessionTypes } from "@/app/[locale]/types/session";
+import { useTranslations } from "next-intl";
 
 interface CreateSessionFormProps {
   onClose: () => void;
@@ -31,24 +35,25 @@ export default function CreateSessionForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations("CreateSessionForm");
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = "Title is required";
-    if (!formData.cost) newErrors.cost = "Cost is required";
-    if (!formData.capacity) newErrors.capacity = "Capacity is required";
-    if (!formData.date) newErrors.date = "Date is required";
-    if (!formData.startTime) newErrors.startTime = "Start time is required";
-    if (!formData.endTime) newErrors.endTime = "End time is required";
-    if (formData.type == "") newErrors.type = "Type is required";
+    if (!formData.title.trim()) newErrors.title = t("titleRequired");
+    if (!formData.cost) newErrors.cost = t("costRequired");
+    if (!formData.capacity) newErrors.capacity = t("capacityRequired");
+    if (!formData.date) newErrors.date = t("dateRequired");
+    if (!formData.startTime) newErrors.startTime = t("startTimeRequired");
+    if (!formData.endTime) newErrors.endTime = t("endTimeRequired");
+    if (formData.type == "") newErrors.type = t("typeRequired");
 
     if (formData.startTime && formData.endTime) {
       const start = new Date(`1970-01-01T${formData.startTime}:00`);
       const end = new Date(`1970-01-01T${formData.endTime}:00`);
 
       if (end <= start) {
-        newErrors.endTime = "End time must be after start time";
+        newErrors.endTime = t("endTimeError");
       }
     }
 
@@ -82,7 +87,7 @@ export default function CreateSessionForm({
     }
 
     if (!userId || !accessToken) {
-      setError("You must be logged in to create a session");
+      setError(t("authError"));
       return;
     }
 
@@ -91,7 +96,6 @@ export default function CreateSessionForm({
 
     try {
       const gymId = await getGymIdByUserId(userId);
-      console.log("Retrieved gymId:", gymId);
 
       const newSession: Omit<Session, "id" | "gym" | "sessionHolder"> = {
         title: formData.title,
@@ -106,8 +110,6 @@ export default function CreateSessionForm({
         imageUrl: formData.imageUrl,
       };
 
-      console.log("Submitting session data:", newSession);
-
       await createSession(newSession, gymId);
 
       onClose();
@@ -120,7 +122,7 @@ export default function CreateSessionForm({
         console.error("Response data:", err.response?.data);
         console.error("Response status:", err.response?.status);
       }
-      setError("Failed to create session. Please try again.");
+      setError(t("sessionCreationError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -141,7 +143,7 @@ export default function CreateSessionForm({
     >
       <div className="bg-white rounded-lg p-6 max-w-[425px] w-full mx-4 shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Create New Session</h2>
+          <h2 className="text-xl font-semibold">{t("createNewSession")}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
@@ -152,7 +154,7 @@ export default function CreateSessionForm({
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Title</span>
+            <span className="text-emerald-800 font-medium">{t("title")}</span>
             <input
               type="text"
               name="title"
@@ -161,7 +163,7 @@ export default function CreateSessionForm({
               className={`border ${
                 errors.title ? "border-red-500" : "border-emerald-200"
               } rounded-lg px-3 py-2 focus:outline-emerald-400`}
-              placeholder="Title"
+              placeholder={t("title")}
             />
             {errors.title && (
               <span className="text-red-500 text-sm">{errors.title}</span>
@@ -169,26 +171,28 @@ export default function CreateSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Description</span>
+            <span className="text-emerald-800 font-medium">
+              {t("description")}
+            </span>
             <input
               type="text"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
               className="border border-emerald-200 rounded-lg px-3 py-2 focus:outline-emerald-400"
-              placeholder="Description"
+              placeholder={t("description")}
             />
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Type</span>
+            <span className="text-emerald-800 font-medium">{t("type")}</span>
             <select
               name="type"
               value={formData.type}
               onChange={handleInputChange}
               className="border border-emerald-200 rounded-lg px-3 py-2 focus:outline-emerald-400"
             >
-              <option value="">Select Type</option>
+              <option value="">{t("typeSelect")}</option>
               {sessionTypes.map((type, index) => (
                 <option key={index} value={type}>
                   {type}
@@ -201,7 +205,7 @@ export default function CreateSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Cost</span>
+            <span className="text-emerald-800 font-medium">{t("cost")}</span>
             <input
               type="number"
               name="cost"
@@ -211,7 +215,7 @@ export default function CreateSessionForm({
               className={`border ${
                 errors.cost ? "border-red-500" : "border-emerald-200"
               } rounded-lg px-3 py-2 focus:outline-emerald-400`}
-              placeholder="Cost"
+              placeholder={t("cost")}
             />
             {errors.cost && (
               <span className="text-red-500 text-sm">{errors.cost}</span>
@@ -219,7 +223,9 @@ export default function CreateSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Capacity</span>
+            <span className="text-emerald-800 font-medium">
+              {t("capacity")}
+            </span>
             <input
               type="number"
               name="capacity"
@@ -229,7 +235,7 @@ export default function CreateSessionForm({
               className={`border ${
                 errors.capacity ? "border-red-500" : "border-emerald-200"
               } rounded-lg px-3 py-2 focus:outline-emerald-400`}
-              placeholder="Capacity"
+              placeholder={t("capacity")}
             />
             {errors.capacity && (
               <span className="text-red-500 text-sm">{errors.capacity}</span>
@@ -237,20 +243,22 @@ export default function CreateSessionForm({
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="text-emerald-800 font-medium">Image Url</span>
+            <span className="text-emerald-800 font-medium">
+              {t("imageUrl")}
+            </span>
             <input
               name="imageUrl"
               value={formData.imageUrl}
               onChange={handleInputChange}
               className="border border-emerald-200 rounded-lg px-3 py-2 focus:outline-emerald-400"
-              placeholder="Image URL"
+              placeholder={t("imageUrl")}
             />
           </label>
 
           <div className="space-y-3">
             <div className="w-full">
               <span className="text-emerald-800 font-medium text-sm block mb-1">
-                Date
+                {t("date")}
               </span>
               <input
                 type="date"
@@ -268,7 +276,9 @@ export default function CreateSessionForm({
 
             <div>
               <label className="flex flex-col gap-1">
-                <span className="text-emerald-800 font-medium">Start Time</span>
+                <span className="text-emerald-800 font-medium">
+                  {t("startTime")}
+                </span>
                 <input
                   type="time"
                   name="startTime"
@@ -288,7 +298,9 @@ export default function CreateSessionForm({
 
             <div>
               <label className="flex flex-col gap-1">
-                <span className="text-emerald-800 font-medium">End Time</span>
+                <span className="text-emerald-800 font-medium">
+                  {t("endTime")}
+                </span>
                 <input
                   type="time"
                   name="endTime"
@@ -310,7 +322,7 @@ export default function CreateSessionForm({
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creating..." : "Add Session"}
+            {isSubmitting ? t("creating") : t("addSession")}
           </Button>
           {error && <span className="text-red-500 text-sm mt-2">{error}</span>}
         </form>

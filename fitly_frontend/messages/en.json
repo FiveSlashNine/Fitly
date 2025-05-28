@@ -1,0 +1,359 @@
+{
+    "AuthPage": {
+        "quote": "Train smarter, not harder",
+        "subheading": "Book your gym sessions in advance and never miss a workout again." 
+    },
+    "RegisterGymPage": {
+        "title": "Fitly",
+        "description": "Book your gym sessions with ease",
+        "quote": "Train smarter, not harder",
+        "subheading": "Book your gym sessions in advance and never miss a workout again." 
+    },
+    "HomePage": {
+        "loadingMap": "Loading Map...",
+        "title": "Discover the Ideal Workout Program",
+        "subtitle": "Countless programs wherever you are!",
+        "locationPlaceholder": "Location",
+        "typePlaceholder": "Type",
+        "search": "Search",
+        "enterLocationError": "Please enter a location.",
+        "servicesTitle": "Our Services",
+        "servicesDescription": "Discover the solution that fits your needs in just a few clicks! Whether you're looking for a place to work out or want to offer your own programs as a professional or business, we have the right option for you. From beginner to advanced programs, there's something for everyone! Just pick your location and your ideal program and start training today!",
+        "learnMore": "Learn More",
+        "athleteCardTitle": "Workout Program Search for Trainees",
+        "athleteCardDescription": "Do you love fitness or want to try new programs? Or are you looking for a new place to train? We are here to help! With a simple search, find the program or gym that suits you and make your reservation easily and quickly!",
+        "signup": "Sign Up",
+        "providerCardTitle": "Offer Workout Programs",
+        "providerCardDescription": "Are you a gym owner or a professional who wants to promote your space or workout programs to trainees? If so, FITLY is here for you! On our platform, you can create and promote your programs while we do all the work for you."
+    }, 
+    "UserProfilePage": {
+        "title": "Account Credentials",
+        "description": "View and update your account information. Your email address cannot be changed."
+    },
+    "InfoPage": {
+        "howFitlyWorks": "How Fitly Works",
+        "startToday": "Get Started Today in 3 Simple Steps",
+
+        "step1Title": "Create an Account",
+        "step1Description": "Sign up in a few seconds or log in with your existing account",
+
+        "step2Title": "Find the Program That Suits You",
+        "step2Description": "Discover programs offered by professionals and gyms. Search by location, date, or type of exercise to find what fits you.",
+
+        "step3Title": "Make Your Reservation",
+        "step3Description": "Choose the program you're interested in, book it immediately, and start your training without delay!",
+
+        "forOwnersAndProfessionals": "For Gym Owners & Fitness Professionals",
+        "ownersDescription": "Fitly lets you publish your workout programs and accept bookings online. Attract new members and improve your services with ease.",
+
+        "feature1Title": "Publish Programs & Sessions",
+        "feature1Description": "Create and publish the programs you offer with just a few clicks.",
+
+        "feature2Title": "Manage Bookings & Sessions",
+        "feature2Description": "From creating a session to confirming bookings, Fitly simplifies every step. Manage your sessions and bookings easily.",
+
+        "feature3Title": "Statistics",
+        "feature3Description": "Track program performance and member preferences through detailed analytics.",
+
+        "signupButton": "Sign Up for Fitly"
+    },
+    "GymDashboardPage": {
+        "createNewSession": "Create New Session",
+        "gymOwnerDashboard": "Gym Owner Dashboard",
+        "tabs": {
+            "sessions": "Sessions",
+            "statistics": "Statistics"
+        },
+        "sessionsCardTitle": "My Sessions",
+        "statisticsCardTitle": "Statistics",
+        "loadingStatistics": "Loading statistics...",
+        "statistics": {
+            "totalSessions": "Total Sessions",
+            "totalParticipants": "Total Participants",
+            "totalRevenue": "Total Revenue"
+        },
+        "editGymHeader": "Edit Details"
+    },
+    "ContactPage": {
+        "title": "Whether you have questions about our services, usage, or anything else, our team is always ready to help.",
+        "contact_title": "Contact us at",
+        "email": "contactFitly@fitly.com",
+        "social_media": "Social Media",
+        "location_title": "Our Location",
+        "university": "University of Macedonia",
+        "department": "Department of Applied Informatics",
+        "form_title": "Contact Us",
+        "form_subtitle": "Have questions or feedback? Send us your message!",
+        "form_email": "Email",
+        "form_email_placeholder": "Enter your email",
+        "form_name": "Full Name",
+        "form_name_placeholder": "Enter your full name",
+        "form_phone": "Phone",
+        "form_phone_placeholder": "Enter your phone number",
+        "form_message": "Message",
+        "form_message_placeholder": "Write your message here...",
+        "form_attachment": "Attachment (Optional)",
+        "submit_button": "Submit",
+        "success_message": "Your message has been successfully sent! We will get back to you soon.",
+        "map_section_title": "🗺️ Here we are!"
+    },
+    "BookedSessionsPage":{
+        "title": "Booked Sessions",
+        "button_cancel_booking": "Cancel Booking",
+        "pagination_loading": "Loading...",
+        "no_sessions_message": "No sessions match your filters. Try adjusting your criteria."
+    },
+    "AvailableSessionsPage":{
+        "title": "Available Sessions",
+        "button_book_session": "Book Session",
+        "loading": "Loading...",
+        "no_results": "No sessions match your filters. Try adjusting your criteria."
+    },
+    "AboutPage": {
+        "title": "About Fitly",
+        "description": "We connect fitness enthusiasts with professional trainers and gyms through an innovative booking platform.",
+        "storyTitle": "Our Story",
+        "storyContent": "Fitly was born from a simple realization: finding and booking fitness sessions should be as easy as ordering food delivery. As students passionate about fitness and technology, we noticed the gap between fitness professionals and potential clients—and decided to bridge it.",
+        "teamTitle": "Our Team",
+        "teamContent1": "We are students of the Department of Applied Informatics at the University of Macedonia. Our mix of tech and business knowledge enables us to create solutions that meet the needs of both professionals and users.",
+        "teamContent2": "What began as a university project is evolving into a complete platform helping both trainees find the perfect workout and professionals grow their businesses.",
+        "valuesTitle": "Our Values",
+        "value1Title": "Accessibility",
+        "value1Content": "Fitness should be easily accessible to everyone, no matter where they are.",
+        "value2Title": "Usability",
+        "value2Content": "A simple and functional booking platform designed for all users.",
+        "value3Title": "Trust",
+        "value3Content": "We’re building a community rooted in transparency, professionalism, and reliable service.",
+        "ctaTitle": "Join the Fitly Community!",
+        "ctaDescription": "Whether you're a fitness lover looking for your next session or a professional aiming to grow your business, Fitly is here to help you achieve your goals.",
+        "ctaButton": "Start Your Journey Today"
+    }, 
+    "CreateSessionForm": {
+        "createNewSession": "Create New Session",
+        "title": "Title",
+        "titleRequired": "Title is required",
+        "description": "Description",
+        "type": "Type",
+        "typeSelect": "Select Type",
+        "typeRequired": "Type is required",
+        "cost": "Cost",
+        "costRequired": "Cost is required",
+        "capacity": "Capacity",
+        "capacityRequired": "Capacity is required",
+        "imageUrl": "Image Url",
+        "date": "Date",
+        "dateRequired": "Date is required",
+        "startTime": "Start Time",
+        "startTimeRequired": "Start time is required",
+        "endTime": "End Time",
+        "endTimeRequired": "End time is required",
+        "endTimeError": "End time must be after start time",
+        "addSession": "Add Session",
+        "creating": "Creating...",
+        "sessionCreationError": "Failed to create session. Please try again.",
+        "authError": "You must be logged in to create a session"
+    },
+    "EditGymForm": {
+        "successMessage": "Details updated successfully!",
+        "nameLabel": "Gym Name",
+        "locationLabel": "Gym Location",
+        "cancelButton": "Cancel",
+        "saveButton": "Save",
+        "savingButton": "Saving..."
+    },
+    "EditSessionForm": {
+        "titleLabel": "Title",
+        "titleError": "Title is required",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Description",
+        "typeLabel": "Type",
+        "typePlaceholder": "Select Type",
+        "typeError": "Type is required",
+        "capacityLabel": "Capacity",
+        "capacityError": "Capacity is required",
+        "imageUrlLabel": "Image Url",
+        "dateLabel": "Date",
+        "dateError": "Date is required",
+        "startTimeLabel": "Start Time",
+        "startTimeError": "Start time is required",
+        "endTimeLabel": "End Time",
+        "endTimeError": "End time is required",
+        "endTimeAfterStartError": "End time must be after start time",
+        "submitButton": "Update Session",
+        "submitButtonLoading": "Updating...",
+        "notLoggedInError": "You must be logged in to update a session",
+        "updateFailedError": "Failed to update session. Please try again.",
+        "editSessionHeading": "Edit Session"
+    },
+    "EditUserDetailsForm": {
+        "emailLabel": "Email",
+        "usernameLabel": "Username",
+        "usernamePatternTitle": "Username must have at least 1 character and contain only letters, numbers, underscores or hyphens.",
+        "phoneNumberLabel": "Phone Number",
+        "phoneNumberPatternTitle": "Phone Numbers Can Contain Up to 14 Digits (Not Characters)",
+        "passwordLabel": "New Password (leave blank to keep current)",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "submitButton": "Save Changes",
+        "submitButtonLoading": "Saving...",
+        "loadingText": "Loading...",
+        "errorDefault": "An unexpected error occurred."
+    },
+     "SignInForm": {
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "signInButton": "Sign In",
+        "noAccount": "Don't have an account? ",
+        "signUpButton": "Sign up",
+        "invalidCredentials": "Invalid email or password."
+    },
+     "SignUpForm": {
+        "usernameLabel": "Username",
+        "usernamePatternTitle": "Username must have at least 1 character and contain only letters, numbers, underscores or hyphens.",
+        "phoneNumberLabel": "Phone Number",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "ownsGymLabel": "Owns a gym",
+        "createAccountButton": "Create Account",
+        "alreadyHaveAccount": "Already have an account? ",
+        "signInButton": "Sign in",
+        "registrationFailed": "Registration failed. Please check your details and try again.",
+        "unexpectedError": "An unexpected error occurred."
+    },
+    "SignUpGymForm": {
+        "gymNameLabel": "Gym Name",
+        "gymNamePlaceholder": "Your Gym's Name",
+        "gymNamePatternTitle": "Gym name must have at least 1 character and contain only letters, numbers, underscores or hyphens.",
+        "gymLocationLabel": "Gym Location",
+        "registerGymButton": "Register Gym",
+        "registrationFailed": "Registration failed. Please check your details and try again.",
+        "unexpectedError": "An unexpected error occurred."
+    }, 
+    "StatisticsTab": {
+        "loading": "Loading statistics...",
+        "noStatistics": "No statistics available",
+        "totalSessions": "Total Sessions",
+        "totalParticipants": "Total Participants",
+        "totalRevenue": "Total Revenue"
+    },
+    "SessionDetails": { 
+        "description": "Description",
+        "capacity": "Capacity: {count} spots",
+        "edit": "Edit Session",
+        "viewParticipants": "View Participants",
+        "loading": "Loading...",
+        "status": {
+            "ACTIVE": "Set Active",
+            "CANCELLED": "Set Cancelled",
+            "FULL": "Set Full"
+        },
+        "delete": "Delete Session",
+        "confirmDeletePrompt": "Are you sure you want to delete this session?",
+        "cancel": "Cancel",
+        "confirmDelete": "Confirm Delete"
+    },
+    "SessionCard": { 
+        "type": "Type: {type}",
+        "capacity": "Capacity: {count}",
+        "cost": "${cost}"
+    },
+    "ParticipantsList": {
+        "title": "Participants",
+        "loading": "Loading participants...",
+        "none": "No participants yet"
+    },
+    "NavBar": {
+        "contact": "Contact",
+        "sessions": "Available Sessions",
+        "registerGym": "Register Gym",
+        "booked": "Booked Sessions",
+        "profile": "My Profile",
+        "dashboard": "Dashboard",
+        "logout": "Logout",
+        "signin": "Sign In",
+        "signup": "Sign Up"
+    },
+    "Footer": {
+        "athlete": "Athlete",
+        "gym": "Gym",
+        "howItWorks": "How it works",
+        "signinAthlete": "Athlete Sign In",
+        "signupAthlete": "Athlete Sign Up",
+        "signinGym": "Gym Sign In",
+        "signupGym": "Gym Sign Up",
+        "aboutUs": "About Us",
+        "whatWeOffer": "What we offer",
+        "contact": "Contact",
+        "followUs": "Follow us",
+        "copyright": "2025 FITLY. All rights reserved."
+    },
+    "FilterSidebar": {
+        "filters": "Filters",
+        "search": "Search",
+        "searchPlaceholder": "Search sessions...",
+        "location": "Location",
+        "locationPlaceholder": "Enter location...",
+        "type": "Session Type",
+        "allTypes": "All Types",
+        "status": "Status",
+        "allStatuses": "All Statuses",
+        "sortBy": "Sort By",
+        "default": "Default",
+        "startAsc": "Start Time (Asc)",
+        "startDesc": "Start Time (Desc)",
+        "endAsc": "End Time (Asc)",
+        "endDesc": "End Time (Desc)",
+        "capacityAsc": "Capacity (Asc)",
+        "capacityDesc": "Capacity (Desc)",
+        "reset": "Reset Filters"
+    },
+    "ClientMap": {
+        "select": "Select"
+    },
+    "AuthCard": {
+        "title": "Fitly",
+        "description": "Book your gym sessions with ease",
+        "signin": "Sign In",
+        "signup": "Sign Up"
+    },
+    "SettingsDropdown": {
+        "settings": "Settings",
+        "view": "My Details",
+        "edit": "Edit Details",
+        "delete": "Delete Account"
+    },
+    "ReserveImageSection": {
+        "subtitle": "RESERVE YOUR SPOT",
+        "title": "Find the perfect workout program",
+        "description": "Discover top workout programs tailored to your needs. Book your spot easily and quickly online.",
+        "button": "BOOK NOW"
+    },
+    "MySessions": {
+        "loading": "Loading sessions...",
+        "noSessionsTitle": "No Sessions Found",
+        "noSessionsText": "Check back later or create a new session.",
+        "type": "Type",
+        "capacity": "Capacity"
+    },
+    "GymDetails": {
+        "title": "Gym Information",
+        "userTitle": "My Information",
+        "gymName": "Gym Name",
+        "location": "Location",
+        "username": "Username",
+        "email": "Email",
+        "phone": "Phone",
+        "loading": "Loading details...",
+        "error": "Failed to load details"
+    },
+    "DeleteConfirmationMessage": {
+        "title": "Delete Gym",
+        "message": "Are you sure you want to delete your gym? All associated data, such as programs and members, will be permanently lost. This action cannot be undone. If you change your mind, you can create a new gym from the home screen.",
+        "cancel": "Cancel",
+        "confirm": "Delete Account"
+    }
+}

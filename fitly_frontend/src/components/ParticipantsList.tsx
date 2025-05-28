@@ -1,6 +1,7 @@
 import React from "react";
 import { UserCircle, Loader2, X as XIcon } from "lucide-react";
-import { User } from "@/app/types/user";
+import { User } from "@/app/[locale]/types/user";
+import { useTranslations } from "next-intl";
 
 interface ParticipantsListProps {
   participants: User[];
@@ -21,6 +22,8 @@ export default function ParticipantsList({
     }
   };
 
+  const t = useTranslations("ParticipantsList");
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-60 bg-black/30 backdrop-blur-sm"
@@ -28,7 +31,7 @@ export default function ParticipantsList({
     >
       <div className="bg-white rounded-lg p-6 max-w-[425px] w-full mx-4 shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Participants</h2>
+          <h2 className="text-xl font-semibold">{t("title")}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
@@ -41,14 +44,12 @@ export default function ParticipantsList({
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-8">
               <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
-              <p className="mt-2 text-gray-600">Loading participants...</p>
+              <p className="mt-2 text-gray-600">{t("loading")}</p>
             </div>
           ) : error ? (
             <div className="text-red-500 text-center py-4">{error}</div>
           ) : participants.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">
-              No participants yet
-            </p>
+            <p className="text-gray-500 text-center py-4">{t("none")}</p>
           ) : (
             participants.map((participant) => (
               <div

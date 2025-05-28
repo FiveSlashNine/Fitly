@@ -1,4 +1,4 @@
-import { Session } from "@/app/types/session";
+import { Session } from "@/app/[locale]/types/session";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import EditSessionForm from "./Forms/EditSessionForm";
@@ -6,8 +6,8 @@ import {
   deleteSession,
   getStatusColor,
   updateSession,
-} from "@/app/lib/sessionHandler";
-import { useAuthStore } from "@/app/lib/store";
+} from "@/app/[locale]/lib/sessionHandler";
+import { useAuthStore } from "@/app/[locale]/lib/store";
 import {
   CalendarIcon,
   ClockIcon,
@@ -17,8 +17,9 @@ import {
   Users,
 } from "lucide-react";
 import ParticipantsList from "./ParticipantsList";
-import { getSessionParticipants } from "@/app/lib/sessionHandler";
-import { User } from "@/app/types/user";
+import { getSessionParticipants } from "@/app/[locale]/lib/sessionHandler";
+import { User } from "@/app/[locale]/types/user";
+import { useTranslations } from "next-intl";
 
 interface SessionDetailsProps {
   session: Session | null;
@@ -44,6 +45,7 @@ export default function SessionDetails({
   const [participantsError, setParticipantsError] = useState<string | null>(
     null
   );
+  const t = useTranslations("SessionDetails");
 
   useEffect(() => {
     setIsEditing(false);
@@ -158,7 +160,7 @@ export default function SessionDetails({
 
           <div className="grid gap-4">
             <div className="space-y-2">
-              <h4 className="font-medium">Description</h4>
+              <h4 className="font-medium">{t("description")}</h4>
               <p className="text-gray-600 text-lg leading-relaxed break-words whitespace-pre-line overflow-auto max-h-[150px] overflow-wrap-anywhere">
                 {session.description}
               </p>
@@ -180,7 +182,7 @@ export default function SessionDetails({
               <div className="flex items-center gap-2">
                 <UsersIcon className="h-5 w-5 text-emerald-600" />
                 <span className="text-gray-600">
-                  Capacity: {session.capacity} spots
+                  {t("capacity", { count: session.capacity })}
                 </span>
               </div>
             </div>
@@ -192,7 +194,7 @@ export default function SessionDetails({
                   onClick={() => setIsEditing(true)}
                   className="flex-1"
                 >
-                  Edit Session
+                  {t("edit")}
                 </Button>
                 <Button
                   variant="outline"
@@ -201,29 +203,29 @@ export default function SessionDetails({
                   disabled={isLoadingParticipants}
                 >
                   <Users className="w-4 h-4" />
-                  {isLoadingParticipants ? "Loading..." : "View Participants"}
+                  {isLoadingParticipants ? t("loading") : t("viewParticipants")}
                 </Button>
                 <select
                   onChange={(e) => handleStatusChange(e.target.value)}
                   className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   value={session.status}
                 >
-                  <option value="ACTIVE">Set Active</option>
-                  <option value="CANCELLED">Set Cancelled</option>
-                  <option value="FULL">Set Full</option>
+                  <option value="ACTIVE">{t("status.ACTIVE")}</option>
+                  <option value="CANCELLED">{t("status.CANCELLED")}</option>
+                  <option value="FULL">{t("status.FULL")}</option>
                 </select>
                 <Button
                   variant="destructive"
                   onClick={() => setShowDeleteConfirm(true)}
                   className="flex-1"
                 >
-                  Delete Session
+                  {t("delete")}
                 </Button>
               </div>
             ) : (
               <div className="mt-4 space-y-2">
                 <p className="text-sm text-gray-600">
-                  Are you sure you want to delete this session?
+                  {t("confirmDeletePrompt")}
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -231,14 +233,14 @@ export default function SessionDetails({
                     onClick={() => setShowDeleteConfirm(false)}
                     className="flex-1"
                   >
-                    Cancel
+                    {t("cancel")}
                   </Button>
                   <Button
                     variant="destructive"
                     onClick={handleDelete}
                     className="flex-1"
                   >
-                    Confirm Delete
+                    {t("confirmDelete")}
                   </Button>
                 </div>
               </div>
